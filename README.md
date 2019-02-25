@@ -129,7 +129,7 @@ If you use netcat with the righ IP and PORT it will return:
 Connection to 172.19.0.3 8001 port [tcp/*] succeeded!
 ```
 
-Once we have the IP and the `admin.macaroon` file, we can comunicate with lnd using curl using [lnd-rest](https://app.swaggerhub.com/apis/lnd-rest/rpc-proto/master).
+Once we have the IP and the `admin.macaroon` file, we can comunicate with lnd using curl using [lnd-rest](https://api.lightning.community/rest/index.html#lnd-rest-api-reference).
 
 - getinfo
 
