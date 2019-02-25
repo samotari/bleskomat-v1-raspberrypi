@@ -1,4 +1,4 @@
-# Beskomat
+# Bleskomat
 
 Cryptocurrency to Lightning Network ATM
 
