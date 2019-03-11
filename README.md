@@ -98,35 +98,16 @@ Copy the `admin.macaroon` file from lnd docker to your filesystem.
 docker cp alice:/root/.lnd/data/chain/bitcoin/simnet/admin.macaroon ~/bleskomat
 ```
 
-Then you need to find the IP where your container is running. You do it by running the command below inside the container:
+Then you need to find the IP where your container is running. You do it by running the command below:
 
 ```bash
-ip addr show
+docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' alice
 ```
 
-It returns you something like:
+It will return something like:
 
 ```bash
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN qlen 1000
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1/8 scope host lo
-       valid_lft forever preferred_lft forever
-41: eth0@if42: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue state UP
-    link/ether 02:42:ac:13:00:03 brd ff:ff:ff:ff:ff:ff
-    inet 172.19.0.3/16 brd 172.19.255.255 scope global eth0
-       valid_lft forever preferred_lft forever
-```
-
-Then you can netcat to the IP from the command before with the port that the container is exposing:
-
-```bash
-netcat -v 172.19.0.3 8001
-```
-
-If you use netcat with the righ IP and PORT it will return:
-
-```bash
-Connection to 172.19.0.3 8001 port [tcp/*] succeeded!
+172.19.0.3
 ```
 
 Once we have the IP and the `admin.macaroon` file, we can comunicate with lnd using curl using [lnd-rest](https://api.lightning.community/rest/index.html#lnd-rest-api-reference).
