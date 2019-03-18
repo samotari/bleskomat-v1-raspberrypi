@@ -1,6 +1,8 @@
 # Bleskomat
 
-Cryptocurrency to Lightning Network ATM
+Cryptocurrency to Lightning Network Access Provider
+
+_Get access to the lightning fast payment network built on top of Bitcoin blockchain!_
 
 <img src="images/diagram/diagram.png" width="700">
 
