@@ -90,6 +90,20 @@ The input and output can be read also directly to and from the device
 by stdin and stdout redirection. In this case the configuration of the
 device can be read and changed using `stty` in this case.
 
+## Display and other devices
+
+Camera
+
+https://www.gme.cz/raspberry-pi-camera-board-5mpx
+
+Display
+
+https://www.gme.cz/raspberry-5-palcovy-800x480-dotykovy-lcd-displej-hdmi
+
+
+https://www.alza.cz/raspberry-pii-touch-display-7-d4268133.htm?o=11#discussionPosts
+
+
 
 [links]:   https://cctalktutorial.wordpress.com/usefull-cctalk-links/
 [tty]:     https://unix.stackexchange.com/questions/117037/how-to-send-data-to-a-serial-port-and-see-any-answer
