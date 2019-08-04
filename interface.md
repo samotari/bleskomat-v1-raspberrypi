@@ -90,19 +90,50 @@ The input and output can be read also directly to and from the device
 by stdin and stdout redirection. In this case the configuration of the
 device can be read and changed using `stty` in this case.
 
-## Display and other devices
+## Display 
 
-Camera
+The first tested display for the prototype is a [3.5''][display3]. To
+setup the display to work with the Rpi additional drivers are
+required. The complete configuration is well [described][dis3conf].
 
-https://www.gme.cz/raspberry-pi-camera-board-5mpx
+The first configuration was done on the Raspberry Pi Model B Rev 2 on
+a Raspbian Buster (full version from 2019-07-10).
 
-Display
+During the configuration the [drivers][disDrive] was downloaded
+unpacked and installed by running `sudo ./LCD35_v` in the driver
+directory `LCD_show_v6_1_3`. No additional setup was required.
 
-https://www.gme.cz/raspberry-5-palcovy-800x480-dotykovy-lcd-displej-hdmi
+## Camera
+
+The [camera][camera] is connected to the @@ port of the Rpi. The
+camara input needs to be enabled by running `sudo raspi-conf`.  Then
+select "Interfacing Options" -> "P1 Camera" -> Enable. After the
+reboot a video device should appear in `dmesg` output and also a
+corresponding device file `/dev/video0` should be ready.
+
+To test if the camera works run `raspistill -o image.jpg` which should
+capture a picture.
+
+### Trouble Shooting
+
+Running `raspistill -o image.jpg` gives the following output:
+```
+Camera control callback  cmd=0x4f525245mmal: No data received from sensor. Check all connections, including the Sunny one on the camera board
+```
+
+Similarly including the camera in a python script and running results
+in the following error:
+
+```
+picamera.exc.PiCameraRuntimeError: No data recevied from sensor. Check all connections, including the SUNNY chip on the camera board
+```
+
+Which seems like the camara is not working properly. According to some
+suggestions this migh acutally be a problem of the camera (I have
+checked the connections, and they seem all right.
 
 
-https://www.alza.cz/raspberry-pii-touch-display-7-d4268133.htm?o=11#discussionPosts
-
+## Frontend
 
 
 [links]:   https://cctalktutorial.wordpress.com/usefull-cctalk-links/
@@ -112,3 +143,14 @@ https://www.alza.cz/raspberry-pii-touch-display-7-d4268133.htm?o=11#discussionPo
 [cctalk2]: resources/cctalkpart2v4-7.pdf
 [cctalk3]: resources/cctalkpart3v4-7.pdf
 [cctalk4]: resources/cctalkpart4v4-7.pdf
+
+
+[display3]: https://www.gme.cz/raspberry-dotykovy-3-5-tft-lcd-shield-320-x-480-spi-product-38590
+[display5]: https://www.gme.cz/raspberry-5-palcovy-800x480-dotykovy-lcd-displej-hdmi
+[display7]: https://www.alza.cz/raspberry-pii-touch-display-7-d4268133.htm?o=11#discussionPosts
+
+[dis3Conf]: resources/dsh.775-107.1.pdf
+[disRpi]:   http://en.kedei.net/raspberry/raspberry.html
+[disDrive]: http://en.kedei.net/raspberry/v6_1/LCD_show_v6_1_3.tar.gz
+
+[camera]: https://www.gme.cz/raspberry-pi-camera-board-5mpx
