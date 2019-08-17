@@ -105,16 +105,18 @@ directory `LCD_show_v6_1_3`. No additional setup was required.
 
 ## Camera
 
-The [camera][camera] is connected to the @@ port of the Rpi. The
-camara input needs to be enabled by running `sudo raspi-conf`.  Then
+The [camera][camera] is connected to the CSI port of the Rpi near to 
+the network connector. 
+
+The camara input needs to be enabled by running `sudo raspi-conf`.  Then
 select "Interfacing Options" -> "P1 Camera" -> Enable. After the
 reboot a video device should appear in `dmesg` output and also a
 corresponding device file `/dev/video0` should be ready.
 
-To test if the camera works run `raspistill -o image.jpg` which should
-capture a picture.
+To test if the camera works run `raspistill -o image.jpg` which
+captures a picture to a file. Similarly `raspivid -o video.h246`
 
-### Trouble Shooting
+### 
 
 Running `raspistill -o image.jpg` gives the following output:
 ```
@@ -126,6 +128,11 @@ in the following error:
 
 ```
 picamera.exc.PiCameraRuntimeError: No data recevied from sensor. Check all connections, including the SUNNY chip on the camera board
+```
+or
+
+```
+picamera.exc.PiCameraRuntimeError: Timed out waiting for capture to end
 ```
 
 Which seems like the camara is not working properly. According to some
