@@ -2,8 +2,9 @@
   "name": "bleskomat-app",
   "version": "0.0.1",
   "description": "The GUI application for project \"bleskomat\"",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
+    "start": "./node_modules/.bin/electron --disable-gpu src/main/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Learn-by-doing/bleskomat/issues"
   },
-  "homepage": "https://github.com/Learn-by-doing/bleskomat#readme"
+  "homepage": "https://github.com/Learn-by-doing/bleskomat#readme",
+  "dependencies": {
+    "electron": "6.0.3"
+  }
 }
