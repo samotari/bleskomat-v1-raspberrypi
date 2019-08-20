@@ -1,0 +1,19 @@
+{
+  "name": "bleskomat-app",
+  "version": "0.0.1",
+  "description": "The GUI application for project \"bleskomat\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Learn-by-doing/bleskomat.git"
+  },
+  "author": "",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Learn-by-doing/bleskomat/issues"
+  },
+  "homepage": "https://github.com/Learn-by-doing/bleskomat#readme"
+}
