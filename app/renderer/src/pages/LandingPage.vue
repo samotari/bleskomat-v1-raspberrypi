@@ -8,15 +8,18 @@
       </div>
 
       <div class="actions">
-        <button class="start" @click="start()">Touch me!</button>
+        <Button label="Touch me!" @onClick="start()" />
       </div>
     </main>
   </div>
 </template>
 
 <script>
+import Button from '../components/Button';
+
 export default {
   name: 'landing-page',
+  components: {Button},
   methods: {
     start() {
       this.$router.push('/scan-invoice');
