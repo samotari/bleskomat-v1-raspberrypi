@@ -21,7 +21,8 @@
   "homepage": "https://github.com/Learn-by-doing/bleskomat#readme",
   "dependencies": {
     "electron": "6.0.3",
-    "vue": "2.6.10"
+    "vue": "2.6.10",
+    "vue-router": "^3.1.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "3.11.0",
