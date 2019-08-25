@@ -1,4 +1,4 @@
-`<template>
+<template>
 	<div class="wrapper">
 		<main>
 			<div class="information">

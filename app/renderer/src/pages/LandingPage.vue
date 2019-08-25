@@ -8,7 +8,7 @@
 			</div>
 
 			<div class="actions">
-				<Button label="Touch me!" @onClick="start()" />
+				<Button label="Touch me!" @on-click="start()" />
 			</div>
 		</main>
 	</div>
