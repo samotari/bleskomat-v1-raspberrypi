@@ -7,7 +7,12 @@
     "start": "npm run build && ./node_modules/.bin/electron --disable-gpu main/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "./node_modules/.bin/vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "npm run lint:main && npm run lint:renderer",
+    "lint:main": "./node_modules/.bin/eslint --config .eslintrc.main.js \"./main/**/*.js\"",
+    "lint:renderer": "./node_modules/.bin/eslint --config .eslintrc.renderer.js \"./renderer/src/**/*.{js,vue}\"",
+    "prettier": "npm run prettier:main && npm run prettier:renderer",
+    "prettier:main": "./node_modules/.bin/prettier --write \"./main/**/*.js\"",
+    "prettier:renderer": "./node_modules/.bin/prettier --write \"./renderer/src/**/*.{js,vue}\""
   },
   "repository": {
     "type": "git",
@@ -19,17 +24,14 @@
     "url": "https://github.com/Learn-by-doing/bleskomat/issues"
   },
   "homepage": "https://github.com/Learn-by-doing/bleskomat#readme",
-  "dependencies": {
-    "electron": "6.0.3",
-    "vue": "2.6.10"
-  },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "3.11.0",
-    "@vue/cli-plugin-eslint": "3.11.0",
     "@vue/cli-service": "3.11.0",
     "babel-eslint": "10.0.1",
+    "electron": "6.0.3",
     "eslint": "5.16.0",
     "eslint-plugin-vue": "5.0.0",
+    "prettier": "1.18.2",
+    "vue": "2.6.10",
     "vue-template-compiler": "2.6.10"
   },
   "eslintConfig": {
