@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -11,7 +11,11 @@ function createWindow() {
 		width: 800,
 		height: 600,
 		webPreferences: {
-			nodeIntegration: true,
+			// This script will be loaded before other scripts run in the page. It will always have
+			// access to node APIs no matter whether node integration is turned on or off. The value
+			// should be the absolute file path to the script. When node integration is turned off,
+			// the preload script can reintroduce Node global symbols back to the global scope.
+			preload: path.join(__dirname, 'preload.js'),
 		},
 	});
 
@@ -55,3 +59,8 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+ipcMain.on('custom-event-name', (event, arg) => {
+	console.log(arg); // prints "ping"
+	event.reply('another-event', 'pong');
+});
