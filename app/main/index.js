@@ -1,4 +1,5 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow } = require('electron');
+var path = require("path");
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -15,7 +16,8 @@ function createWindow () {
 	})
 
 	// and load the index.html of the app.
-	win.loadFile('../index.html')
+	const url = path.resolve('./renderer/dist/index.html');
+	win.loadURL(`file://${url}`);
 
 	// Open the DevTools.
 	win.webContents.openDevTools()

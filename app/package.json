@@ -4,8 +4,10 @@
   "description": "The GUI application for project \"bleskomat\"",
   "main": "src/index.js",
   "scripts": {
-    "start": "./node_modules/.bin/electron --disable-gpu src/main/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run build && ./node_modules/.bin/electron --disable-gpu main/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./node_modules/.bin/vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
   "repository": {
     "type": "git",
@@ -18,6 +20,39 @@
   },
   "homepage": "https://github.com/Learn-by-doing/bleskomat#readme",
   "dependencies": {
-    "electron": "6.0.3"
-  }
+    "electron": "6.0.3",
+    "vue": "2.6.10"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "3.11.0",
+    "@vue/cli-plugin-eslint": "3.11.0",
+    "@vue/cli-service": "3.11.0",
+    "babel-eslint": "10.0.1",
+    "eslint": "5.16.0",
+    "eslint-plugin-vue": "5.0.0",
+    "vue-template-compiler": "2.6.10"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "rules": {},
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
 }
