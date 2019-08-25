@@ -1,20 +1,22 @@
 <template>
-  <button @click="start()">{{ label }}</button>
+	<button @click="start()">
+		{{ label }}
+	</button>
 </template>
 
 <script>
 export default {
-  name: 'Button',
-  props: {
-    label: String
-  },
-  methods: {
-    onClick() {
-      this.$emit('on-click');
-    }
-  }
-}
+	name: 'Button',
+	props: {
+		label: {
+			type: String,
+			default: 'Button',
+		},
+	},
+	methods: {
+		onClick() {
+			this.$emit('on-click');
+		},
+	},
+};
 </script>
-
-<style scoped>
-</style>
