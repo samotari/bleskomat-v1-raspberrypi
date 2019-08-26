@@ -4,13 +4,14 @@
   "description": "The GUI application for project \"bleskomat\"",
   "main": "src/index.js",
   "scripts": {
-    "start": "npm run build && ./node_modules/.bin/electron --disable-gpu main/index.js",
-    "test": "npm run lint",
     "build": "./node_modules/.bin/vue-cli-service build",
+    "build:dev": "npm run build -- --watch",
     "lint": "npm run lint:main && npm run lint:renderer",
     "lint:main": "./node_modules/.bin/eslint --config .eslintrc.main.js \"./main/**/*.js\"",
     "lint:renderer": "./node_modules/.bin/eslint --config .eslintrc.renderer.js \"./renderer/src/**/*.{js,vue}\"",
-    "prettier": "./node_modules/.bin/prettier --write \"./main/**/*.js\" \"./renderer/src/**/*.{js,vue}\" \"*.js\""
+    "prettier": "./node_modules/.bin/prettier --write \"./main/**/*.js\" \"./renderer/src/**/*.{js,vue}\" \"*.js\"",
+    "test": "npm run lint",
+    "start": "npm run build && ./node_modules/.bin/electron --disable-gpu main/index.js"
   },
   "repository": {
     "type": "git",
