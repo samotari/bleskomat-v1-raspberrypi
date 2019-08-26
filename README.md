@@ -2,7 +2,7 @@
 
 Cryptocurrency to Lightning Network ATM
 
-<img src="images/diagram/diagram.png" width="700">
+<img src="images/ux-flows/ux-flow-v0-simple.png" width="800">
 
 ## Requirements
 
