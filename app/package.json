@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "npm run build && ./node_modules/.bin/electron --disable-gpu main/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run lint",
     "build": "./node_modules/.bin/vue-cli-service build",
     "lint": "npm run lint:main && npm run lint:renderer",
     "lint:main": "./node_modules/.bin/eslint --config .eslintrc.main.js \"./main/**/*.js\"",
