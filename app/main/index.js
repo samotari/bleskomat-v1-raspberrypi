@@ -1,4 +1,6 @@
+const _ = require('underscore');
 const { app, BrowserWindow, ipcMain } = require('electron');
+const services = require('./services');
 const path = require('path');
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -60,7 +62,11 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-ipcMain.on('custom-event-name', (event, arg) => {
-	console.log(arg); // prints "ping"
-	event.reply('another-event', 'pong');
+ipcMain.on('get-exchange-rate', function(event, options) {
+	services.exchangeRates.get(options, function(error, rate) {
+		let result = _.extend({}, options.currencies, {
+			rate: rate,
+		});
+		event.reply('exchange-rate', result);
+	});
 });
