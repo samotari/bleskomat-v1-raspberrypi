@@ -11,9 +11,11 @@ new Vue({
 
 var ipcRenderer = window.ipcRenderer;
 
-ipcRenderer.on('another-event', (event, arg) => {
-	// prints "pong":
-	console.log(arg); // eslint-disable-line no-console
+ipcRenderer.on('exchange-rate', function(event, result) {
+	console.log('exchange-rate', result); // eslint-disable-line no-console
 });
 
-ipcRenderer.send('custom-event-name', 'ping');
+ipcRenderer.send('get-exchange-rate', {
+	currencies: { from: 'BTC', to: 'EUR' },
+	provider: 'coinbase',
+});
