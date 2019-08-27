@@ -149,3 +149,14 @@ ipcMain.on('start-receiving-bill-notes', event => {
 		}
 	});
 });
+
+ipcMain.on('lnd', function(event, service, method, payload) {
+	payload = payload || {};
+	services.lnd.exec(service, method, payload, function(error, result) {
+		if (error) {
+			console.log(error); // eslint-disable-line no-console
+		} else {
+			event.reply(`lnd.${service}.${method}`, result);
+		}
+	});
+});

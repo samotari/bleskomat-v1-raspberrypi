@@ -43,6 +43,7 @@
     "eslint-plugin-vue": "5.0.0",
     "handlebars": "4.1.2",
     "jsqr": "1.2.0",
+    "lnd-grpc": "0.2.16",
     "prettier": "1.18.2",
     "request": "2.88.0",
     "serialport": "7.1.5",

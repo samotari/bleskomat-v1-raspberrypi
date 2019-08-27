@@ -2,6 +2,11 @@ require('dotenv').config();
 
 module.exports = {
 	bitcoinDecimalPlaces: 8,
+	lnd: {
+		host: process.env.BLESKOMAT_LND_HOST,
+		cert: process.env.BLESKOMAT_LND_CERT,
+		macaroon: process.env.BLESKOMAT_LND_MACAROON,
+	},
 	supportedCurrencies: [
 		{
 			BigNumber: {
