@@ -32,6 +32,12 @@ npm install
 npm start
 ```
 
+If you would like to have _partial_ hot reload while developing, run the following command in a separate terminal window:
+```bash
+npm run build:dev
+```
+If you make any modifications in `app/renderer`, the build process will trigger automatically and you can see your changes in the Electron app by reloading the app (e.g. <kbd>CMD</kbd>+<kbd>R</kbd> on Mac, <kbd>CTRL</kbd>+<kbd>R</kbd> on Windows and Linux).
+
 
 ## License
 
