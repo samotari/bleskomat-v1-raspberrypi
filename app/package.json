@@ -12,7 +12,8 @@
     "lint:renderer": "./node_modules/.bin/eslint --config .eslintrc.renderer.js \"./renderer/src/**/*.{js,vue}\"",
     "prettier": "./node_modules/.bin/prettier --write \"./main/**/*.js\" \"./renderer/src/**/*.{js,vue}\" \"*.js\"",
     "test": "npm run lint",
-    "start": "npm run build && ./node_modules/.bin/electron --disable-gpu main/index.js"
+    "start": "npm run build && ./node_modules/.bin/electron --disable-gpu main/index.js",
+    "electron:rebuild": "./node_modules/.bin/electron-rebuild $(electron -v)"
   },
   "repository": {
     "type": "git",
@@ -31,12 +32,14 @@
     "bignumber.js": "9.0.0",
     "dotenv": "8.1.0",
     "electron": "6.0.3",
+    "electron-rebuild": "1.8.6",
     "eslint": "5.16.0",
     "eslint-plugin-vue": "5.0.0",
     "handlebars": "4.1.2",
     "jsqr": "1.2.0",
     "prettier": "1.18.2",
     "request": "2.88.0",
+    "serialport": "7.1.5",
     "underscore": "1.9.1",
     "vue": "2.6.10",
     "vue-router": "3.1.2",
