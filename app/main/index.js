@@ -1,7 +1,10 @@
 const _ = require('underscore');
+const async = require('async');
+const BigNumber = require('bignumber.js');
 const { app, BrowserWindow, ipcMain } = require('electron');
-const services = require('./services');
+const config = require('./config');
 const path = require('path');
+const services = require('./services');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -62,11 +65,51 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-ipcMain.on('get-exchange-rate', function(event, options) {
-	services.exchangeRates.get(options, function(error, rate) {
-		let result = _.extend({}, options.currencies, {
-			rate: rate,
-		});
-		event.reply('exchange-rate', result);
-	});
+ipcMain.on('get-exchange-rates', function(event) {
+	async.map(
+		config.supportedCurrencies,
+		function(currency, next) {
+			const options = {
+				currencies: {
+					from: 'BTC',
+					to: currency.symbol,
+				},
+				provider: currency.provider,
+			};
+			services.exchangeRates.get(options, function(error, rate) {
+				if (error) {
+					console.log(error); // eslint-disable-line no-console
+					next(null, null);
+				} else {
+					next(null, {
+						currency: currency,
+						rate: rate,
+					});
+				}
+			});
+		},
+		function(error, results) {
+			const rates = _.chain(results)
+				.compact()
+				.map(function(result) {
+					let value;
+					try {
+						BigNumber.config(result.currency.BigNumber);
+						// Invert the rate then apply currency-specific formatting.
+						value = new BigNumber(result.rate)
+							.toFormat(result.currency.decimals)
+							.toString();
+					} catch (error) {
+						console.log(error); // eslint-disable-line no-console
+						value = result.rate;
+					}
+					return {
+						value: value,
+						symbol: result.currency.symbol,
+					};
+				})
+				.value();
+			event.reply('exchange-rates', rates);
+		},
+	);
 });
