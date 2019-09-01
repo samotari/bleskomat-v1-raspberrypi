@@ -15,7 +15,7 @@ header {
 	<div class="wrapper">
 		<header>
 			<img src="../../assets/bitcoin-lightning.svg" :style="styleObject" />
-			<ExchangeRates />
+			<ExchangeRates :rates="rates" />
 		</header>
 		<main>
 			<div class="actions">
@@ -27,6 +27,8 @@ header {
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import Button from '../../components/Button';
 import ExchangeRates from './ExchangeRates';
 
@@ -38,6 +40,14 @@ export default {
 			width: '10%',
 		},
 	}),
+	computed: {
+		...mapState({
+			rates: state => state.rates,
+		}),
+	},
+	mounted() {
+		this.$store.dispatch('fetchRates');
+	},
 	methods: {
 		start() {
 			this.$router.push('/scan-invoice');
