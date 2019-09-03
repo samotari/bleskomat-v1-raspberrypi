@@ -19,17 +19,11 @@
 <script>
 export default {
 	name: 'ExchangeRates',
-	data() {
-		return {
-			rates: null,
-		};
-	},
-	mounted() {
-		const ipcRenderer = window.ipcRenderer;
-		ipcRenderer.on('exchange-rates', (event, rates) => {
-			this.rates = rates;
-		});
-		ipcRenderer.send('get-exchange-rates');
+	props: {
+		rates: {
+			type: Object,
+			default: null,
+		},
 	},
 };
 </script>
