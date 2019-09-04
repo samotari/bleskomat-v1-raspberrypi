@@ -17,5 +17,6 @@ module.exports = {
 		],
 		'vue/max-attributes-per-line': ['ignore'],
 		'vue/html-self-closing': 0,
+		'no-var': 1,
 	},
 };

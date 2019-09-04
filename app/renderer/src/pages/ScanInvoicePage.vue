@@ -44,7 +44,7 @@ export default {
 		navigator.getUserMedia(
 			{ video: true, audio: false },
 			localMediaStream => {
-				var video = document.querySelector('video');
+				const video = document.querySelector('video');
 				video.srcObject = localMediaStream;
 				video.autoplay = true;
 				this.startReadingQrCode();
@@ -69,7 +69,7 @@ export default {
 				},
 				() => {
 					if (!this.canceled && this.qrcode) {
-						var qrcode = this.qrcode;
+						const qrcode = this.qrcode;
 						console.log(`Found QR code! --> "${qrcode}"`); // eslint-disable-line no-console
 						this.$router.push('/insert-money');
 					}
@@ -79,9 +79,9 @@ export default {
 		tryToReadQrCode(done) {
 			requestAnimationFrame(function() {
 				try {
-					var video = document.querySelector('video');
-					var canvasElement = document.querySelector('canvas');
-					var canvas = canvasElement.getContext('2d');
+					const video = document.querySelector('video');
+					const canvasElement = document.querySelector('canvas');
+					const canvas = canvasElement.getContext('2d');
 					if (video.readyState === video.HAVE_ENOUGH_DATA) {
 						canvasElement.height = video.videoHeight;
 						canvasElement.width = video.videoWidth;
@@ -92,13 +92,17 @@ export default {
 							canvasElement.width,
 							canvasElement.height,
 						);
-						var imageData = canvas.getImageData(
+						const imageData = canvas.getImageData(
 							0,
 							0,
 							canvasElement.width,
 							canvasElement.height,
 						);
-						var code = jsQR(imageData.data, imageData.width, imageData.height);
+						const code = jsQR(
+							imageData.data,
+							imageData.width,
+							imageData.height,
+						);
 						if (code) {
 							return done(null, code.data);
 						}
