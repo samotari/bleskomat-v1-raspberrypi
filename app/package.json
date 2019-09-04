@@ -6,6 +6,7 @@
   "scripts": {
     "build": "./node_modules/.bin/vue-cli-service build",
     "build:dev": "npm run build -- --watch",
+    "mock:webcam": "./scripts/mock-webcam.sh",
     "lint": "npm run lint:main && npm run lint:renderer",
     "lint:main": "./node_modules/.bin/eslint --config .eslintrc.main.js \"./main/**/*.js\"",
     "lint:renderer": "./node_modules/.bin/eslint --config .eslintrc.renderer.js \"./renderer/src/**/*.{js,vue}\"",
