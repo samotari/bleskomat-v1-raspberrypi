@@ -4,6 +4,12 @@ video {
 	max-width: 360px;
 	height: auto;
 }
+canvas {
+	position: absolute;
+	left: -99999em;
+	top: 0;
+	visibility: hidden;
+}
 </style>
 
 <template>
@@ -17,6 +23,7 @@ video {
 
 			<div id="video">
 				<video></video>
+				<canvas></canvas>
 			</div>
 
 			<div class="actions">
@@ -29,6 +36,8 @@ video {
 </template>
 
 <script>
+import async from 'async';
+import jsQR from 'jsqr';
 export default {
 	name: 'ScanInvocePage',
 	mounted() {
@@ -38,6 +47,7 @@ export default {
 				var video = document.querySelector('video');
 				video.srcObject = localMediaStream;
 				video.autoplay = true;
+				this.startReadingQrCode();
 			},
 			error => {
 				console.log(error); // eslint-disable-line no-console
@@ -45,7 +55,62 @@ export default {
 		);
 	},
 	methods: {
+		startReadingQrCode() {
+			async.until(
+				next => {
+					next(null, this.canceled || !!this.qrcode);
+				},
+				next => {
+					this.tryToReadQrCode((error, data) => {
+						if (error) return next(error);
+						if (data) this.qrcode = data;
+						next();
+					});
+				},
+				() => {
+					if (!this.canceled && this.qrcode) {
+						var qrcode = this.qrcode;
+						console.log(`Found QR code! --> "${qrcode}"`); // eslint-disable-line no-console
+						this.$router.push('/insert-money');
+					}
+				},
+			);
+		},
+		tryToReadQrCode(done) {
+			requestAnimationFrame(function() {
+				try {
+					var video = document.querySelector('video');
+					var canvasElement = document.querySelector('canvas');
+					var canvas = canvasElement.getContext('2d');
+					if (video.readyState === video.HAVE_ENOUGH_DATA) {
+						canvasElement.height = video.videoHeight;
+						canvasElement.width = video.videoWidth;
+						canvas.drawImage(
+							video,
+							0,
+							0,
+							canvasElement.width,
+							canvasElement.height,
+						);
+						var imageData = canvas.getImageData(
+							0,
+							0,
+							canvasElement.width,
+							canvasElement.height,
+						);
+						var code = jsQR(imageData.data, imageData.width, imageData.height);
+						if (code) {
+							return done(null, code.data);
+						}
+					}
+				} catch (error) {
+					return done(error);
+				}
+				done();
+			});
+		},
 		cancel() {
+			this.canceled = true;
 			this.$router.push('/landing-page');
 		},
 	},
