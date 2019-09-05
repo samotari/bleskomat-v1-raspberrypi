@@ -1,6 +1,5 @@
 const _ = require('underscore');
 const SerialPort = require('serialport');
-
 const config = require('../config');
 
 module.exports = {
@@ -11,7 +10,6 @@ module.exports = {
 	connect: function(options) {
 		options = _.defaults(options || {}, this.defaultOptions);
 		let port;
-
 		try {
 			port = new SerialPort(options.portPath, {
 				baudRate: options.baudRate,

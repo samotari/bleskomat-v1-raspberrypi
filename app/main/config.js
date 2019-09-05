@@ -29,7 +29,7 @@ module.exports = {
 		},
 	],
 	paperMoneyReader: {
-		portPath: '/dev/ttyACM1',
+		portPath: process.env.BLESKOMAT_PAPER_MONEY_READER_DEVICE || '/dev/ttyACM1',
 		baudRate: 9600,
 		notes: {
 			1: {

@@ -124,10 +124,8 @@ ipcMain.on('start-receiving-bill-notes', event => {
 	let czk = new BigNumber(0);
 
 	port.on('data', data => {
-		const buffer = Buffer.from(data);
-		const command = buffer[0];
+		const command = data.toString();
 		const inserted = paperMoney[command];
-
 		const czk2btc = _.find(ratesStored, rate => rate.currency.symbol === 'CZK');
 		const eur2btc = _.find(ratesStored, rate => rate.currency.symbol === 'EUR');
 
