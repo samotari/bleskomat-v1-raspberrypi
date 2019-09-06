@@ -7,12 +7,15 @@
     "build": "./node_modules/.bin/vue-cli-service build",
     "build:dev": "npm run build -- --watch",
     "mock:webcam": "./scripts/mock-webcam.sh",
+    "mock:serialports": "./scripts/mock-serialports.sh",
+    "mock:paper-money-reader": "node ./scripts/mock-paper-money-reader.js",
     "lint": "npm run lint:main && npm run lint:renderer",
     "lint:main": "./node_modules/.bin/eslint --config .eslintrc.main.js \"./main/**/*.js\"",
     "lint:renderer": "./node_modules/.bin/eslint --config .eslintrc.renderer.js \"./renderer/src/**/*.{js,vue}\"",
     "prettier": "./node_modules/.bin/prettier --write \"./main/**/*.js\" \"./renderer/src/**/*.{js,vue}\" \"*.js\"",
     "test": "npm run lint",
-    "start": "npm run build && ./node_modules/.bin/electron --disable-gpu main/index.js"
+    "start": "npm run build && ./node_modules/.bin/electron --disable-gpu main/index.js",
+    "electron:rebuild": "./node_modules/.bin/electron-rebuild $(electron -v)"
   },
   "repository": {
     "type": "git",
@@ -24,19 +27,25 @@
     "url": "https://github.com/Learn-by-doing/bleskomat/issues"
   },
   "homepage": "https://github.com/Learn-by-doing/bleskomat#readme",
+  "dependencies": {
+    "@serialport/bindings": "2.0.8"
+  },
   "devDependencies": {
+    "@serialport/bindings-dev": "npm:@serialport/bindings@2.0.8",
     "@vue/cli-service": "3.11.0",
     "async": "3.1.0",
     "babel-eslint": "10.0.1",
     "bignumber.js": "9.0.0",
     "dotenv": "8.1.0",
     "electron": "6.0.3",
+    "electron-rebuild": "1.8.6",
     "eslint": "5.16.0",
     "eslint-plugin-vue": "5.0.0",
     "handlebars": "4.1.2",
     "jsqr": "1.2.0",
     "prettier": "1.18.2",
     "request": "2.88.0",
+    "serialport": "7.1.5",
     "underscore": "1.9.1",
     "vue": "2.6.10",
     "vue-router": "3.1.2",

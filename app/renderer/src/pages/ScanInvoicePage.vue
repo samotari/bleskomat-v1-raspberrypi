@@ -30,6 +30,10 @@ canvas {
 				<button class="cancel" @click="cancel()">
 					Cancel
 				</button>
+				<!-- TODO: remove when scanning invoice is added -->
+				<button class="cancel" @click="skip()">
+					Skip
+				</button>
 			</div>
 		</main>
 	</div>
@@ -112,6 +116,9 @@ export default {
 		cancel() {
 			this.canceled = true;
 			this.$router.push('/landing-page');
+		},
+		skip() {
+			this.$router.push('/insert-money');
 		},
 	},
 };

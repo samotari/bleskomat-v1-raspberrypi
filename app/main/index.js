@@ -65,6 +65,7 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
+let ratesStored;
 ipcMain.on('get-exchange-rates', function(event) {
 	async.map(
 		config.supportedCurrencies,
@@ -89,6 +90,7 @@ ipcMain.on('get-exchange-rates', function(event) {
 			});
 		},
 		function(error, results) {
+			ratesStored = results;
 			const rates = _.chain(results)
 				.compact()
 				.map(function(result) {
@@ -112,4 +114,38 @@ ipcMain.on('get-exchange-rates', function(event) {
 			event.reply('exchange-rates', rates);
 		},
 	);
+});
+
+ipcMain.on('start-receiving-bill-notes', event => {
+	const paperMoney = config.paperMoneyReader.notes;
+	const { port } = services.paperMoneyReader.connect();
+
+	let eur = new BigNumber(0);
+	let czk = new BigNumber(0);
+
+	port.on('data', data => {
+		const command = data.toString();
+		const inserted = paperMoney[command];
+		const czk2btc = _.find(ratesStored, rate => rate.currency.symbol === 'CZK');
+		const eur2btc = _.find(ratesStored, rate => rate.currency.symbol === 'EUR');
+
+		if (inserted) {
+			if (inserted.currency === 'EUR') {
+				eur = eur.plus(Number(inserted.amount));
+			}
+			if (inserted.currency === 'CZK') {
+				czk = czk.plus(inserted.amount);
+			}
+
+			const eurInBtc = eur.dividedBy(eur2btc.rate);
+			const czkInBtc = czk.dividedBy(czk2btc.rate);
+
+			const totalBtc = czkInBtc.plus(eurInBtc);
+			event.reply('received-bill-note', {
+				eur: eur.toString(),
+				czk: czk.toString(),
+				totalBtc: totalBtc.toFixed(config.bitcoinDecimalPlaces),
+			});
+		}
+	});
 });
