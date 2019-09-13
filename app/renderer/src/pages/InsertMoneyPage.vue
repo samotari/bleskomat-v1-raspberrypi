@@ -43,7 +43,7 @@ export default {
 	},
 	methods: {
 		done() {
-			// TODO
+			this.$router.push('/payment-done');
 		},
 	},
 };
