@@ -1,5 +1,5 @@
 <template>
-	<div @click="goToLanding()" class="wrapper">
+	<div class="wrapper" @click="goToLanding()">
 		<main>
 			<img src="../assets/checkbox.svg" />
 			<h2>Success!</h2>

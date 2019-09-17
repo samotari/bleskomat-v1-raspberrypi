@@ -155,6 +155,7 @@ ipcMain.on('lnd', function(event, service, method, payload) {
 	services.lnd.exec(service, method, payload, function(error, result) {
 		if (error) {
 			console.log(error); // eslint-disable-line no-console
+			event.reply(`lnd.${service}.${method}.error`);
 		} else {
 			event.reply(`lnd.${service}.${method}`, result);
 		}
