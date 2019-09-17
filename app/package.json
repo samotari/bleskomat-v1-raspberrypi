@@ -1,50 +1,52 @@
 {
-  "name": "bleskomat-app",
+  "name": "bleskomat",
   "version": "0.0.1",
-  "description": "The GUI application for project \"bleskomat\"",
-  "main": "src/index.js",
+  "description": "The open-source Lightning Network ATM",
+  "main": "index.js",
   "scripts": {
+    "app": "./node_modules/.bin/electron --disable-gpu index.js",
+    "app:dev": "NODE_ENV=dev npm run app",
+    "app:prod": "NODE_ENV=production npm run app",
     "build": "./node_modules/.bin/vue-cli-service build",
-    "build:dev": "npm run build -- --watch",
+    "build:dev": "NODE_ENV=dev npm run build -- --mode development",
+    "build:dev:watch": "NODE_ENV=dev npm run build -- --mode development --watch",
+    "build:prod": "NODE_ENV=production npm run build",
+    "builder": "./node_modules/.bin/electron-builder --config=./electron-builder.config.js",
+    "builder:dev": "npm run build:dev && npm run builder -- $1",
+    "builder:prod": "npm run build:prod && NODE_ENV=production npm run builder -- $1",
     "mock:webcam": "./scripts/mock-webcam.sh",
     "mock:serialports": "./scripts/mock-serialports.sh",
     "mock:paper-money-reader": "node ./scripts/mock-paper-money-reader.js",
     "lint": "npm run lint:main && npm run lint:renderer",
     "lint:main": "./node_modules/.bin/eslint --config .eslintrc.main.js \"./main/**/*.js\"",
     "lint:renderer": "./node_modules/.bin/eslint --config .eslintrc.renderer.js \"./renderer/src/**/*.{js,vue}\"",
+    "postinstall": "./node_modules/.bin/electron-builder install-app-deps",
     "prettier": "./node_modules/.bin/prettier --write \"./main/**/*.js\" \"./renderer/src/**/*.{js,vue}\" \"*.js\"",
     "test": "npm run lint",
-    "start": "npm run build && ./node_modules/.bin/electron --disable-gpu main/index.js",
-    "electron:rebuild": "./node_modules/.bin/electron-rebuild $(electron -v)"
+    "start": "npm run build:dev && npm run app:dev"
   },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/Learn-by-doing/bleskomat.git"
   },
-  "author": "",
+  "author": {
+    "name": "Samotari",
+    "email": "crypto.samotari@gmail.com",
+    "url": "https://github.com/samotari"
+  },
   "license": "AGPL-3.0",
   "bugs": {
     "url": "https://github.com/Learn-by-doing/bleskomat/issues"
   },
   "homepage": "https://github.com/Learn-by-doing/bleskomat#readme",
   "dependencies": {
-    "@serialport/bindings": "2.0.8"
-  },
-  "devDependencies": {
-    "@serialport/bindings-dev": "npm:@serialport/bindings@2.0.8",
-    "@vue/cli-service": "3.11.0",
+    "@serialport/bindings": "2.0.8",
     "async": "3.1.0",
-    "babel-eslint": "10.0.1",
     "bignumber.js": "9.0.0",
     "dotenv": "8.1.0",
-    "electron": "6.0.3",
-    "electron-rebuild": "1.8.6",
-    "eslint": "5.16.0",
-    "eslint-plugin-vue": "5.0.0",
     "handlebars": "4.1.2",
     "jsqr": "1.2.0",
     "lnd-grpc": "0.2.16",
-    "prettier": "1.18.2",
     "request": "2.88.0",
     "serialport": "7.1.5",
     "underscore": "1.9.1",
@@ -52,6 +54,16 @@
     "vue-router": "3.1.2",
     "vue-template-compiler": "2.6.10",
     "vuex": "3.1.1"
+  },
+  "devDependencies": {
+    "@serialport/bindings-dev": "npm:@serialport/bindings@2.0.8",
+    "@vue/cli-service": "3.11.0",
+    "babel-eslint": "10.0.1",
+    "electron": "6.0.3",
+    "electron-builder": "21.2.0",
+    "eslint": "5.16.0",
+    "eslint-plugin-vue": "5.0.0",
+    "prettier": "1.18.2"
   },
   "eslintConfig": {
     "root": true,

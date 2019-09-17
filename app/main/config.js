@@ -1,6 +1,9 @@
+const { app } = require('electron');
 require('dotenv').config();
 
 module.exports = {
+	env: process.env.NODE_ENV || 'dev',
+	appPath: app.getAppPath(),
 	bitcoinDecimalPlaces: 8,
 	lnd: {
 		host: process.env.BLESKOMAT_LND_HOST,

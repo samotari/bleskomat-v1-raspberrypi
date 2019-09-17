@@ -27,10 +27,15 @@ const _ = require('underscore');
 const path = require('path');
 const SerialPort = require('serialport');
 const config = require('../main/config');
-const port1 = new SerialPort(path.resolve('./dev/ttyMOCK1'));
+const mockDevicePath = path.join(__dirname, '..', 'dev', 'ttyMOCK1');
+const port1 = new SerialPort(mockDevicePath);
 const notes = _.chain(config.paperMoneyReader.notes).map(function(note, key) {
 	return [key.toString(), [note.amount, note.currency].join(' ')];
 }).object().value();
+
+port1.on('error', function(error) {
+	console.log(error);
+});
 
 const stdin = process.stdin;
 stdin.setRawMode(true);

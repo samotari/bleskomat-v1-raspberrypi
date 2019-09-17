@@ -20,16 +20,23 @@ function createWindow() {
 			// access to node APIs no matter whether node integration is turned on or off. The value
 			// should be the absolute file path to the script. When node integration is turned off,
 			// the preload script can reintroduce Node global symbols back to the global scope.
-			preload: path.join(__dirname, 'preload.js'),
+			preload: path.join(config.appPath, 'main', 'preload.js'),
 		},
 	});
 
 	// and load the index.html of the app.
-	const url = path.resolve('./renderer/dist/index.html');
-	win.loadURL(`file://${url}`);
+	const indexFilePath = path.join(
+		config.appPath,
+		'renderer',
+		'dist',
+		'index.html',
+	);
+	win.loadURL(`file://${indexFilePath}`);
 
-	// Open the DevTools.
-	win.webContents.openDevTools();
+	if (config.env === 'dev') {
+		// Open the DevTools.
+		win.webContents.openDevTools();
+	}
 
 	// Emitted when the window is closed.
 	win.on('closed', () => {

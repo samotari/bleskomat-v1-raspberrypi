@@ -15,7 +15,7 @@ If you would like to contribute to the project, the following should help get yo
 The following is a list of requirements needed to contribute to this project.
 
 * [nodejs](https://nodejs.org/) - For Linux and Mac install node via [nvm](https://github.com/creationix/nvm).
- * [lnd](https://github.com/lightningnetwork/lnd)
+* [lnd](https://github.com/lightningnetwork/lnd)
 
 
 ## Getting Started
@@ -34,9 +34,32 @@ npm start
 
 If you would like to have _partial_ hot reload while developing, run the following command in a separate terminal window:
 ```bash
-npm run build:dev
+npm run build:dev:watch
 ```
 If you make any modifications in `app/renderer`, the build process will trigger automatically and you can see your changes in the Electron app by reloading the app (e.g. <kbd>CMD</kbd>+<kbd>R</kbd> on Mac, <kbd>CTRL</kbd>+<kbd>R</kbd> on Windows and Linux).
+
+
+## Building App Packages
+
+This project uses [electron-builder](https://www.electron.build/) to build packages for various platforms.
+
+### Linux
+
+To build the a development app package for Linux (`.deb`):
+```bash
+npm run builder:dev
+```
+The architecture of the built `.deb` package will match your current system.
+
+To build an app package for production:
+```bash
+npm run builder:prod
+```
+
+If you want to target a different architecture (e.g for raspberry pi):
+```bash
+npm run builder:prod -- --armv7l
+```
 
 
 ## License
