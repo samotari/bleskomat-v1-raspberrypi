@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self'; img-src 'self'; style-src-elem 'self'; default-src 'none'">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self'<%= NODE_ENV !== 'production' ? ` 'unsafe-eval'` : ``%>; img-src 'self'; style-src 'self'<%= NODE_ENV !== 'production' ? ` 'unsafe-inline'` : ``%>; default-src 'none'">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title>renderer</title>
   </head>
