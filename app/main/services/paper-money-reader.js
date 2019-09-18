@@ -9,14 +9,12 @@ module.exports = {
 	},
 	connect: function(options) {
 		options = _.defaults(options || {}, this.defaultOptions);
-		let port;
-		try {
-			port = new SerialPort(options.portPath, {
-				baudRate: options.baudRate,
-			});
-		} catch (error) {
-			console.error(`there was an eror connecting to port port: ${error}`);
-		}
+		const port = new SerialPort(options.portPath, {
+			baudRate: options.baudRate,
+		});
+		port.on('error', function(error) {
+			console.log(`Error while opening port: ${error}`);
+		});
 		return {
 			port,
 		};

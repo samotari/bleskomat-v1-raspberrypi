@@ -4,6 +4,14 @@ const LndGrpc = require('lnd-grpc');
 const config = require('../config');
 const grpc = new LndGrpc(config.lnd);
 
+let hasAllRequiredConfigs = true;
+_.each(['host', 'cert', 'macaroon'], function(key) {
+	if (!config.lnd[key]) {
+		hasAllRequiredConfigs = false;
+		console.log(`Missing required config: "lnd.${key}"`); // eslint-disable-line no-console
+	}
+});
+
 const LndService = (module.exports = {
 	grpcWhiteList: {
 		Lightning: ['decodePayReq', 'getInfo', 'sendPaymentSync'],
@@ -12,6 +20,9 @@ const LndService = (module.exports = {
 		this.queues.exec.push({ fn: fn });
 	},
 	exec: function(service, method, payload, done) {
+		if (!this.isConfigured()) {
+			return done(new Error('lnd.service not configured'));
+		}
 		this.onReady(() => {
 			if (!this.isWhiteListed(service, method)) {
 				return done(
@@ -37,28 +48,33 @@ const LndService = (module.exports = {
 			_.contains(this.grpcWhiteList[service], method)
 		);
 	},
+	isConfigured: function() {
+		return hasAllRequiredConfigs;
+	},
 	isActive: function() {
 		return grpc.state === 'active';
 	},
 	initialize: function() {
 		this.prepareQueues();
 		this.pauseQueues();
-		grpc.on('locked', () => {
-			this.queues.exec.pause();
-		});
-		grpc.on('disconnected', () => {
-			this.queues.exec.pause();
-		});
-		grpc.on('active', () => {
-			this.queues.exec.resume();
-		});
-		this.connect(error => {
-			if (error) {
-				console.log(error); // eslint-disable-line no-console
-			} else if (this.isActive()) {
+		if (this.isConfigured()) {
+			grpc.on('locked', () => {
+				this.queues.exec.pause();
+			});
+			grpc.on('disconnected', () => {
+				this.queues.exec.pause();
+			});
+			grpc.on('active', () => {
 				this.queues.exec.resume();
-			}
-		});
+			});
+			this.connect(error => {
+				if (error) {
+					console.log(error); // eslint-disable-line no-console
+				} else if (this.isActive()) {
+					this.queues.exec.resume();
+				}
+			});
+		}
 	},
 	connect: function(done) {
 		grpc
