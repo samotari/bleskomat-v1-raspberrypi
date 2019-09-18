@@ -30,10 +30,6 @@ canvas {
 				<button class="cancel" @click="cancel()">
 					Cancel
 				</button>
-				<!-- TODO: remove when scanning invoice is added -->
-				<button class="cancel" @click="skip()">
-					Skip
-				</button>
 			</div>
 		</main>
 	</div>
@@ -71,11 +67,20 @@ export default {
 						next();
 					});
 				},
-				() => {
+				async () => {
 					if (!this.canceled && this.qrcode) {
-						const qrcode = this.qrcode;
-						console.log(`Found QR code! --> "${qrcode}"`); // eslint-disable-line no-console
-						this.$router.push('/insert-money');
+						console.log(`Found QR code! --> "${this.qrcode}"`); // eslint-disable-line no-console
+						try {
+							const decodedPayReq = await this.decodePayReq(this.qrcode);
+							this.$router.push({
+								name: 'insert-money-page',
+								params: { decodedPayReq: decodedPayReq },
+							});
+						} catch (error) {
+							console.log('QR code not supported', error); // eslint-disable-line no-console
+							this.qrcode = null;
+							this.startReadingQrCode();
+						}
 					}
 				},
 			);
@@ -117,12 +122,23 @@ export default {
 				done();
 			});
 		},
+		async decodePayReq(payReq) {
+			const ipcRenderer = window.ipcRenderer;
+			return new Promise((resolve, reject) => {
+				ipcRenderer.on('lnd.Lightning.decodePayReq', (event, result) => {
+					resolve(result);
+				});
+				ipcRenderer.on('lnd.Lightning.decodePayReq.error', (event, result) => {
+					reject(result);
+				});
+				ipcRenderer.send('lnd', 'Lightning', 'decodePayReq', {
+					pay_req: payReq,
+				});
+			});
+		},
 		cancel() {
 			this.canceled = true;
 			this.$router.push('/landing-page');
-		},
-		skip() {
-			this.$router.push('/insert-money');
 		},
 	},
 };

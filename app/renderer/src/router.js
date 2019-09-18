@@ -16,7 +16,7 @@ export default new Router({
 			component: require('./pages/ScanInvoicePage').default,
 		},
 		{
-			path: '/insert-money',
+			path: '/insert-money/:decodedPayReq',
 			name: 'insert-money-page',
 			component: require('./pages/InsertMoneyPage').default,
 		},

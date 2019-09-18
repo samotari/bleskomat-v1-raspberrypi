@@ -5,16 +5,21 @@
 			<p>Press button when finished</p>
 		</header>
 		<main>
-			<article>
-				<ul>
-					<li>{{ eur }} EUR</li>
-					<li>{{ czk }} CZK</li>
-					<li>{{ totalBtc }} BTC</li>
-				</ul>
-			</article>
-			<article class="actions">
-				<Button label="Done" @on-click="done()" />
-			</article>
+			<section class="invoice-detail">
+				<p>Destination: {{ destination }}</p>
+			</section>
+			<section class="inserted-money">
+				<article>
+					<ul>
+						<li>{{ eur }} EUR</li>
+						<li>{{ czk }} CZK</li>
+						<li>{{ totalBtc }} BTC</li>
+					</ul>
+				</article>
+				<article class="actions">
+					<Button label="Done" @on-click="done()" />
+				</article>
+			</section>
 		</main>
 	</div>
 </template>
@@ -30,9 +35,12 @@ export default {
 			eur: 0,
 			czk: 0,
 			totalBtc: 0,
+			destination: null,
 		};
 	},
 	mounted() {
+		const { decodedPayReq } = this.$route.params;
+		this.destination = decodedPayReq.destination;
 		const ipcRenderer = window.ipcRenderer;
 		ipcRenderer.on('received-bill-note', (event, { czk, eur, totalBtc }) => {
 			this.czk = czk;
@@ -56,11 +64,19 @@ header {
 }
 main {
 	display: flex;
-	justify-content: space-around;
+	flex-direction: column;
 }
 ul {
 	text-align: left;
 	font-weight: bold;
 	list-style-type: none;
+}
+section.invoice-detail {
+	font-weight: bold;
+	list-style-type: none;
+}
+section.inserted-money {
+	justify-content: space-around;
+	display: flex;
 }
 </style>
