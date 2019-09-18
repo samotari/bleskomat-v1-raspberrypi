@@ -1,5 +1,7 @@
 # Bleskomat
 
+[![Build Status](https://travis-ci.org//samotari/bleskomat.svg?branch=master)](https://travis-ci.org/samotari/bleskomat)
+
 Open source software (+hardware) project to create a prototype Lightning Network ATM
 
 <img src="images/ux-flows/ux-flow-v0-simple.png" width="800">
