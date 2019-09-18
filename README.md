@@ -45,7 +45,7 @@ This project uses [electron-builder](https://www.electron.build/) to build packa
 
 ### Linux
 
-To build the a development app package for Linux (`.deb`):
+To build a development app package for Linux (`.deb`):
 ```bash
 npm run builder:dev
 ```
