@@ -21,7 +21,7 @@ export default {
 	name: 'ExchangeRates',
 	props: {
 		rates: {
-			type: Object,
+			type: Array,
 			default: null,
 		},
 	},
