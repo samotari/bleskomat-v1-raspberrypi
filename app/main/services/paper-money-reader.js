@@ -1,6 +1,7 @@
 const _ = require('underscore');
 const SerialPort = require('serialport');
 const config = require('../config');
+const logger = require('../logger');
 
 module.exports = {
 	defaultOptions: {
@@ -13,7 +14,7 @@ module.exports = {
 			baudRate: options.baudRate,
 		});
 		port.on('error', function(error) {
-			console.log(`Error while opening port: ${error}`);
+			logger.info(`Error while opening port: ${error}`);
 		});
 		return {
 			port,

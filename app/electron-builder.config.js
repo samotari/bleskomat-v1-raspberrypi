@@ -1,4 +1,5 @@
 const _ = require('underscore');
+const package = require('./package.json');
 const env = process.env.NODE_ENV || 'dev';
 
 const deepClone = function(obj) {
@@ -7,9 +8,9 @@ const deepClone = function(obj) {
 
 let configs = {
 	dev: {
-		appId: 'com.github.samotari.bleskomat',
-		productName: 'Bleskomat',
-		copyright: 'Copyright (C) 2019 the Bleskomat project contributors',
+		appId: package.app.id,
+		productName: package.app.name,
+		copyright: package.app.copyright,
 		files: [
 			// See:
 			// https://www.electron.build/configuration/contents#files
@@ -24,8 +25,8 @@ let configs = {
 		},
 		linux: {
 			target: 'deb',
-			synopsis: 'The open-source Lightning Network ATM',
-			description: '',
+			synopsis: package.description,
+			description: package.description,
 		},
 	},
 };
@@ -34,7 +35,8 @@ if (_.contains(process.argv, '--armv7l')) {
 	configs.dev.files = configs.dev.files.concat([
 		'!node_modules/@serialport/bindings/build/Release/bindings.node',
 		{
-			from: 'prebuilt/linux-armv7l/node_modules/@serialport/bindings/build/Release',
+			from:
+				'prebuilt/linux-armv7l/node_modules/@serialport/bindings/build/Release',
 			to: 'node_modules/@serialport/bindings/build/Release',
 			filter: ['bindings.node'],
 		},

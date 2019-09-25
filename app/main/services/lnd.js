@@ -2,13 +2,14 @@ const _ = require('underscore');
 const async = require('async');
 const LndGrpc = require('lnd-grpc');
 const config = require('../config');
+const logger = require('../logger');
 const grpc = new LndGrpc(config.lnd);
 
 let hasAllRequiredConfigs = true;
 _.each(['host', 'cert', 'macaroon'], function(key) {
 	if (!config.lnd[key]) {
 		hasAllRequiredConfigs = false;
-		console.log(`Missing required config: "lnd.${key}"`); // eslint-disable-line no-console
+		logger.info(`Missing required config: "lnd.${key}"`);
 	}
 });
 
@@ -69,7 +70,7 @@ const LndService = (module.exports = {
 			});
 			this.connect(error => {
 				if (error) {
-					console.log(error); // eslint-disable-line no-console
+					logger.error(error);
 				} else if (this.isActive()) {
 					this.queues.exec.resume();
 				}
@@ -91,7 +92,7 @@ const LndService = (module.exports = {
 				try {
 					task.fn();
 				} catch (error) {
-					console.log(error); // eslint-disable-line no-console
+					logger.error(error);
 				}
 				next();
 			}, 1 /* concurrency */),
@@ -107,13 +108,13 @@ const LndService = (module.exports = {
 LndService.initialize();
 
 // LndService.exec('Lightning', 'getInfo', function() {
-// 	console.log(arguments); // eslint-disable-line no-console
+// 	logger.info(arguments);
 // });
 
 // LndService.exec('Lightning', 'decodePayReq', { pay_req }, function() {
-// 	console.log(arguments); // eslint-disable-line no-console
+// 	logger.info(arguments);
 // });
 
 // LndService.exec('Lightning', 'sendPaymentSync', { payment_request: pay_req }, function() {
-// 	console.log(arguments); // eslint-disable-line no-console
+// 	logger.info(arguments);
 // });

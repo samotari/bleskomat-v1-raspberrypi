@@ -2,9 +2,14 @@
   "name": "bleskomat",
   "version": "0.0.1",
   "description": "The open-source Lightning Network ATM",
+  "app": {
+    "id": "com.github.samotari.bleskomat",
+    "name": "Bleskomat",
+    "copyright": "Copyright (C) 2019 the Bleskomat project contributors"
+  },
   "main": "index.js",
   "scripts": {
-    "app": "./node_modules/.bin/electron --disable-gpu index.js",
+    "app": "./node_modules/.bin/electron --disable-gpu .",
     "app:dev": "NODE_ENV=dev npm run app",
     "app:prod": "NODE_ENV=production npm run app",
     "build": "./node_modules/.bin/vue-cli-service build",
@@ -63,7 +68,8 @@
     "electron-builder": "21.2.0",
     "eslint": "5.16.0",
     "eslint-plugin-vue": "5.0.0",
-    "prettier": "1.18.2"
+    "prettier": "1.18.2",
+    "winston": "3.2.1"
   },
   "eslintConfig": {
     "root": true,

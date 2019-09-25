@@ -1,4 +1,6 @@
 /dev/
 /dist/
+/logs/
 /node_modules/
 .env
+*.log

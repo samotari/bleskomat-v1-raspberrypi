@@ -5,6 +5,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const config = require('./config');
 const path = require('path');
 const services = require('./services');
+const logger = require('./logger');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -86,7 +87,7 @@ ipcMain.on('get-exchange-rates', function(event) {
 			};
 			services.exchangeRates.get(options, function(error, rate) {
 				if (error) {
-					console.log(error); // eslint-disable-line no-console
+					logger.error(error);
 					next(null, null);
 				} else {
 					next(null, {
@@ -109,7 +110,7 @@ ipcMain.on('get-exchange-rates', function(event) {
 							.toFormat(config.format.numbers.decimals)
 							.toString();
 					} catch (error) {
-						console.log(error); // eslint-disable-line no-console
+						logger.error(error);
 						value = result.rate;
 					}
 					return {
@@ -144,7 +145,12 @@ ipcMain.on('start-receiving-bill-notes', event => {
 			}
 			const eurInBtc = eur.dividedBy(eur2btc.rate);
 			const czkInBtc = czk.dividedBy(czk2btc.rate);
-			const satoshis = Math.floor(czkInBtc.plus(eurInBtc).times(1e8).toNumber());
+			const satoshis = Math.floor(
+				czkInBtc
+					.plus(eurInBtc)
+					.times(1e8)
+					.toNumber(),
+			);
 			event.reply('received-bill-note', {
 				eur: eur.toString(),
 				czk: czk.toString(),
@@ -158,7 +164,7 @@ ipcMain.on('lnd', function(event, service, method, payload) {
 	payload = payload || {};
 	services.lnd.exec(service, method, payload, function(error, result) {
 		if (error) {
-			console.log(error); // eslint-disable-line no-console
+			logger.error(error);
 			event.reply(`lnd.${service}.${method}.error`);
 		} else {
 			event.reply(`lnd.${service}.${method}`, result);
