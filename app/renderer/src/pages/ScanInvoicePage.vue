@@ -13,33 +13,27 @@ canvas {
 </style>
 
 <template>
-	<div class="wrapper">
-		<main>
-			<div class="information">
-				<span class="title">
-					Scan your invoice!
-				</span>
-			</div>
+	<PageTemplate>
+		<template v-slot:title><h3>Scan your invoice</h3></template>
+		<div id="video">
+			<video></video>
+			<canvas></canvas>
+		</div>
 
-			<div id="video">
-				<video></video>
-				<canvas></canvas>
-			</div>
-
-			<div class="actions">
-				<button class="cancel" @click="cancel()">
-					Cancel
-				</button>
-			</div>
-		</main>
-	</div>
+		<div class="actions">
+			<Button type="info" @on-click="cancel()" label="Cancel" />
+		</div>
+	</PageTemplate>
 </template>
 
 <script>
 import async from 'async';
 import jsQR from 'jsqr';
+import Button from '../components/Button';
+import PageTemplate from '../components/PageTemplate';
 export default {
 	name: 'ScanInvocePage',
+	components: { Button, PageTemplate },
 	mounted() {
 		navigator.getUserMedia(
 			{ video: true, audio: false },

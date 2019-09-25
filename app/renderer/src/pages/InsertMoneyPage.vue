@@ -1,35 +1,46 @@
 <template>
-	<div class="wrapper">
-		<header>
-			<h1>Enter cash</h1>
-			<p>Press button when finished</p>
-		</header>
-		<main>
+	<PageTemplate>
+		<template v-slot:title>
+			<h2>Enter cash</h2>
+		</template>
+		<div class="wrapper">
 			<section class="invoice-detail">
-				<p>Destination: {{ destination }}</p>
+				<p class="light label">Destination</p>
+				<p>{{ destination }}</p>
 			</section>
 			<section class="inserted-money">
 				<article>
-					<ul>
-						<li>{{ eur }} EUR</li>
-						<li>{{ czk }} CZK</li>
-						<li>{{ totalBtc }} BTC</li>
-					</ul>
+					<table>
+						<tr>
+							<td></td>
+							<td>{{ eur }} EUR</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>{{ czk }} CZK</td>
+						</tr>
+						<tr class="total-bitcoin">
+							<td></td>
+							<td>{{ totalBtc }} BTC</td>
+						</tr>
+					</table>
 				</article>
 				<article class="actions">
+					<p class="light">Press button when finished</p>
 					<Button label="Done" @on-click="done()" />
 				</article>
 			</section>
-		</main>
-	</div>
+		</div>
+	</PageTemplate>
 </template>
 
 <script>
 import Button from '../components/Button';
+import PageTemplate from '../components/PageTemplate';
 
 export default {
 	name: 'InsertMoneyPage',
-	components: { Button },
+	components: { Button, PageTemplate },
 	data() {
 		return {
 			eur: 0,
@@ -58,25 +69,44 @@ export default {
 </script>
 
 <style scoped>
-header {
-	text-align: left;
-	font-weight: bold;
-}
-main {
+.wrapper {
 	display: flex;
 	flex-direction: column;
 }
-ul {
+table {
 	text-align: left;
 	font-weight: bold;
-	list-style-type: none;
+	border-collapse: collapse;
+}
+table td {
+	min-width: 20px;
+}
+.total-bitcoin td {
+	margin-top: 8px;
+	padding-top: 4px;
+	border-top: 2px solid rgba(44,62,80, 0.7);
 }
 section.invoice-detail {
+	text-align: left;
+	align-self: center;
 	font-weight: bold;
-	list-style-type: none;
 }
 section.inserted-money {
 	justify-content: space-around;
 	display: flex;
+}
+p {
+	margin: 0;
+	margin-bottom: 1rem;
+}
+p.light {
+	color: rgba(44,62,80, 0.7);
+	font-size: 14px;
+	margin-bottom: 0.5rem;
+}
+p.label {
+	font-size: 12px;
+	text-transform: uppercase;
+	margin-bottom: 0.2rem;
 }
 </style>

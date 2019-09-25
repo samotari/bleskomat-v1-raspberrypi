@@ -2,6 +2,19 @@
 header {
 	display: flex;
 	justify-content: space-between;
+  align-items: center;
+}
+
+header > * {
+  flex: 1;
+}
+
+main {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex: 1;
+  padding: 10px 0;
 }
 
 .wrapper {
@@ -9,18 +22,28 @@ header {
 	flex-direction: column;
 	justify-content: space-between;
 }
+
+.bitcoin-image {
+  text-align: left;
+}
+
+.bitcoin-image img {
+  max-width: 64px;
+}
+
 </style>
 
 <template>
-	<div class="wrapper">
+	<div class="wrapper" @click="onClick">
 		<header>
-			<img src="../../assets/bitcoin-lightning.svg" :style="styleObject" />
+      <div class="bitcoin-image">
+			  <img src="../assets/bitcoin-lightning.svg" />
+      </div>
+      <slot name="title"></slot>
 			<ExchangeRates :rates="rates" />
 		</header>
 		<main>
-			<div class="actions">
-				<Button label="Get Started" @on-click="start()" />
-			</div>
+			<slot></slot>
 		</main>
 		<footer>Bleskomat, <em>Lightning Network ATM</em></footer>
 	</div>
@@ -29,17 +52,11 @@ header {
 <script>
 import { mapState } from 'vuex';
 
-import Button from '../../components/Button';
 import ExchangeRates from './ExchangeRates';
 
 export default {
-	name: 'LandingPage',
-	components: { Button, ExchangeRates },
-	data: () => ({
-		styleObject: {
-			width: '10%',
-		},
-	}),
+	name: 'PageTemplate',
+	components: { ExchangeRates },
 	computed: {
 		...mapState({
 			rates: state => state.rates,
@@ -56,6 +73,9 @@ export default {
 	methods: {
 		start() {
 			this.$router.push('/scan-invoice');
+    },
+    onClick() {
+			this.$emit('on-click');
 		},
 	},
 };

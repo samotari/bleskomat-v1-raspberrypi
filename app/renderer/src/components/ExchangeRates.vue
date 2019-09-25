@@ -29,9 +29,15 @@ export default {
 </script>
 
 <style scoped>
+main {
+	display: flex;
+	justify-content: flex-end;
+}
+
 ul {
 	text-align: left;
 	font-weight: bold;
 	list-style-type: none;
+	font-size: 14px;
 }
 </style>

@@ -8,7 +8,7 @@ export default new Router({
 		{
 			path: '/',
 			name: 'landing-page',
-			component: require('./pages/LandingPage/LandingPage').default,
+			component: require('./pages/LandingPage').default,
 		},
 		{
 			path: '/scan-invoice',
