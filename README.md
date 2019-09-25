@@ -45,23 +45,22 @@ If you make any modifications in `app/renderer`, the build process will trigger 
 
 This project uses [electron-builder](https://www.electron.build/) to build packages for various platforms.
 
-### Linux
-
-To build a development app package for Linux (`.deb`):
+To build development app package(s):
 ```bash
 npm run builder:dev
 ```
-The architecture of the built `.deb` package will match your current system.
+This will build packages according to the current system - e.g on Linux a `.deb` package should be built with the same architecture as the current system.
 
-To build an app package for production:
+To build app package(s) for production:
 ```bash
 npm run builder:prod
 ```
 
-If you want to target a different architecture (e.g for raspberry pi):
+To target a different architecture (e.g for raspberry pi):
 ```bash
 npm run builder:prod -- --armv7l
 ```
+Prebuilt bindings are included with the project where needed - e.g the serialport module bindings for armv7l. Prebuilt bindings are located [here](https://github.com/samotari/bleskomat/tree/master/app/prebuilt).
 
 
 ## License
