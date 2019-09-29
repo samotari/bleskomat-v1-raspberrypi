@@ -10,8 +10,8 @@ module.exports = {
 		cert: process.env.BLESKOMAT_LND_CERT,
 		macaroon: process.env.BLESKOMAT_LND_MACAROON,
 	},
-	supportedCurrencies: [
-		{
+	format: {
+		numbers: {
 			BigNumber: {
 				FORMAT: {
 					decimalSeparator: ',',
@@ -20,18 +20,14 @@ module.exports = {
 				},
 			},
 			decimals: 0,
+		},
+	},
+	supportedCurrencies: [
+		{
 			provider: 'coinbase',
 			symbol: 'CZK',
 		},
 		{
-			BigNumber: {
-				FORMAT: {
-					decimalSeparator: ',',
-					groupSeparator: ' ',
-					groupSize: 3,
-				},
-			},
-			decimals: 2,
 			provider: 'coinbase',
 			symbol: 'EUR',
 		},

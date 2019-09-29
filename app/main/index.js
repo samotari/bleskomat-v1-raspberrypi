@@ -103,10 +103,10 @@ ipcMain.on('get-exchange-rates', function(event) {
 				.map(function(result) {
 					let value;
 					try {
-						BigNumber.config(result.currency.BigNumber);
+						BigNumber.config(config.format.numbers.BigNumber);
 						// Invert the rate then apply currency-specific formatting.
 						value = new BigNumber(result.rate)
-							.toFormat(result.currency.decimals)
+							.toFormat(config.format.numbers.decimals)
 							.toString();
 					} catch (error) {
 						console.log(error); // eslint-disable-line no-console
