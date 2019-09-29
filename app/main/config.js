@@ -3,8 +3,7 @@ require('dotenv').config();
 
 module.exports = {
 	env: process.env.NODE_ENV || 'dev',
-	appPath: app.getAppPath(),
-	bitcoinDecimalPlaces: 8,
+	appPath: app && app.getAppPath(),
 	lnd: {
 		host: process.env.BLESKOMAT_LND_HOST,
 		cert: process.env.BLESKOMAT_LND_CERT,
@@ -14,8 +13,8 @@ module.exports = {
 		numbers: {
 			BigNumber: {
 				FORMAT: {
-					decimalSeparator: ',',
-					groupSeparator: ' ',
+					decimalSeparator: '.',
+					groupSeparator: ',',
 					groupSize: 3,
 				},
 			},

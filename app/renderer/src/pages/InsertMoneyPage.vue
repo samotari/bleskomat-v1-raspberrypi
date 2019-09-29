@@ -23,7 +23,7 @@
 						</tr>
 						<tr class="total-bitcoin">
 							<td></td>
-							<td>{{ totalBtc }} BTC</td>
+							<td>{{ satoshis }} sats</td>
 						</tr>
 					</table>
 				</article>
@@ -49,7 +49,7 @@ export default {
 		return {
 			eur: 0,
 			czk: 0,
-			totalBtc: 0,
+			satoshis: 0,
 			destination: null,
 		};
 	},
@@ -57,10 +57,10 @@ export default {
 		const { decodedPayReq } = this.$route.params;
 		this.destination = decodedPayReq.destination;
 		const ipcRenderer = window.ipcRenderer;
-		ipcRenderer.on('received-bill-note', (event, { czk, eur, totalBtc }) => {
+		ipcRenderer.on('received-bill-note', (event, { czk, eur, satoshis }) => {
 			this.czk = czk;
 			this.eur = eur;
-			this.totalBtc = totalBtc;
+			this.satoshis = satoshis;
 		});
 		ipcRenderer.send('start-receiving-bill-notes');
 	},

@@ -135,7 +135,6 @@ ipcMain.on('start-receiving-bill-notes', event => {
 		const inserted = paperMoney[command];
 		const czk2btc = _.find(ratesStored, rate => rate.currency.symbol === 'CZK');
 		const eur2btc = _.find(ratesStored, rate => rate.currency.symbol === 'EUR');
-
 		if (inserted) {
 			if (inserted.currency === 'EUR') {
 				eur = eur.plus(Number(inserted.amount));
@@ -143,15 +142,13 @@ ipcMain.on('start-receiving-bill-notes', event => {
 			if (inserted.currency === 'CZK') {
 				czk = czk.plus(inserted.amount);
 			}
-
 			const eurInBtc = eur.dividedBy(eur2btc.rate);
 			const czkInBtc = czk.dividedBy(czk2btc.rate);
-
-			const totalBtc = czkInBtc.plus(eurInBtc);
+			const satoshis = Math.floor(czkInBtc.plus(eurInBtc).times(1e8).toNumber());
 			event.reply('received-bill-note', {
 				eur: eur.toString(),
 				czk: czk.toString(),
-				totalBtc: totalBtc.toFixed(config.bitcoinDecimalPlaces),
+				satoshis: satoshis,
 			});
 		}
 	});
