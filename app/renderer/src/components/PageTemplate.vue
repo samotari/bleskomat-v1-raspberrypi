@@ -2,19 +2,19 @@
 header {
 	display: flex;
 	justify-content: space-between;
-  align-items: center;
+	align-items: center;
 }
 
 header > * {
-  flex: 1;
+	flex: 1;
 }
 
 main {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  flex: 1;
-  padding: 10px 0;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	flex: 1;
+	padding: 10px 0;
 }
 
 .wrapper {
@@ -24,22 +24,21 @@ main {
 }
 
 .bitcoin-image {
-  text-align: left;
+	text-align: left;
 }
 
 .bitcoin-image img {
-  max-width: 64px;
+	max-width: 64px;
 }
-
 </style>
 
 <template>
 	<div class="wrapper" @click="onClick">
 		<header>
-      <div class="bitcoin-image">
-			  <img src="../assets/bitcoin-lightning.svg" />
-      </div>
-      <slot name="title"></slot>
+			<div class="bitcoin-image">
+				<img src="../assets/bitcoin-lightning.svg" />
+			</div>
+			<slot name="title"></slot>
 			<ExchangeRates :rates="rates" />
 		</header>
 		<main>
@@ -73,8 +72,8 @@ export default {
 	methods: {
 		start() {
 			this.$router.push('/scan-invoice');
-    },
-    onClick() {
+		},
+		onClick() {
 			this.$emit('on-click');
 		},
 	},

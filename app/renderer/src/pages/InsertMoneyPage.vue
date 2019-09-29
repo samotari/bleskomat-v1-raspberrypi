@@ -5,7 +5,9 @@
 		</template>
 		<div class="wrapper">
 			<section class="invoice-detail">
-				<p class="light label">Destination</p>
+				<p class="light label">
+					Destination
+				</p>
 				<p>{{ destination }}</p>
 			</section>
 			<section class="inserted-money">
@@ -26,7 +28,9 @@
 					</table>
 				</article>
 				<article class="actions">
-					<p class="light">Press button when finished</p>
+					<p class="light">
+						Press button when finished
+					</p>
 					<Button label="Done" @on-click="done()" />
 				</article>
 			</section>
@@ -84,7 +88,7 @@ table td {
 .total-bitcoin td {
 	margin-top: 8px;
 	padding-top: 4px;
-	border-top: 2px solid rgba(44,62,80, 0.7);
+	border-top: 2px solid rgba(44, 62, 80, 0.7);
 }
 section.invoice-detail {
 	text-align: left;
@@ -100,7 +104,7 @@ p {
 	margin-bottom: 1rem;
 }
 p.light {
-	color: rgba(44,62,80, 0.7);
+	color: rgba(44, 62, 80, 0.7);
 	font-size: 14px;
 	margin-bottom: 0.5rem;
 }

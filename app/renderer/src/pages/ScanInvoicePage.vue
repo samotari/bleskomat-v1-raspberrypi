@@ -14,14 +14,16 @@ canvas {
 
 <template>
 	<PageTemplate>
-		<template v-slot:title><h3>Scan your invoice</h3></template>
+		<template v-slot:title>
+			<h3>Scan your invoice</h3>
+		</template>
 		<div id="video">
 			<video></video>
 			<canvas></canvas>
 		</div>
 
 		<div class="actions">
-			<Button type="info" @on-click="cancel()" label="Cancel" />
+			<Button type="info" label="Cancel" @on-click="cancel()" />
 		</div>
 	</PageTemplate>
 </template>

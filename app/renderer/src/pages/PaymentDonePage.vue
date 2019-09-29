@@ -1,8 +1,10 @@
 <template>
 	<PageTemplate @on-click="goToLanding()">
-		<template v-slot:title><h2>Success!</h2></template>
+		<template v-slot:title>
+			<h2>Success!</h2>
+		</template>
 		<img src="../assets/checkbox.svg" />
-		</PageTemplate>
+	</PageTemplate>
 </template>
 
 <script>
@@ -38,7 +40,7 @@ export default {
 </script>
 
 <style scoped>
-	img {
-		height: 40%;
-	}
+img {
+	height: 40%;
+}
 </style>

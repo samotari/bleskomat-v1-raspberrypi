@@ -14,7 +14,7 @@ export default {
 	methods: {
 		start() {
 			this.$router.push('/scan-invoice');
-		}
-	}
+		},
+	},
 };
 </script>

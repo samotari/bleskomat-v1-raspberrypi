@@ -1,28 +1,28 @@
 <style scoped>
-	.defaultButton {
-		border: 2px;
-		border-color: #35495E;
-		border-style: solid;
-		border-radius: 10px;
-		font-weight: bold;
-		font-size: 18px;
-		padding: 18px;
-	}
+.defaultButton {
+	border: 2px;
+	border-color: #35495e;
+	border-style: solid;
+	border-radius: 10px;
+	font-weight: bold;
+	font-size: 18px;
+	padding: 18px;
+}
 
-	.button-primary {
-		background-color: #41B883;
-		color:  white;
-	}
-	.button-info {
-		background-color: white;
-		color:  #41B883;
-		font-size: 14px;
-		padding: 14px;
-	}
+.button-primary {
+	background-color: #41b883;
+	color: white;
+}
+.button-info {
+	background-color: white;
+	color: #41b883;
+	font-size: 14px;
+	padding: 14px;
+}
 </style>
 
 <template>
-	<button :class="['defaultButton', 'button-'+type]" @click="onClick()">
+	<button :class="['defaultButton', 'button-' + type]" @click="onClick()">
 		{{ label }}
 	</button>
 </template>
@@ -37,9 +37,9 @@ export default {
 		},
 		type: {
 			type: String,
-			default: "primary",
-			validator: value => ["primary", "info"].indexOf(value) >= 0,
-		}
+			default: 'primary',
+			validator: value => ['primary', 'info'].indexOf(value) >= 0,
+		},
 	},
 	methods: {
 		onClick() {
