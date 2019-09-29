@@ -9,6 +9,8 @@ Open source software (+hardware) project to create a prototype Lightning Network
 If you would like to contribute to the project, the following should help get you started:
 * [Requirements](#requirements)
 * [Getting Started](#getting-started)
+  * [Mock Paper Money Reader](#mock-paper-money-reader)
+* [Building App Packages](#building-app-packages)
 * [License](#license)
 
 
