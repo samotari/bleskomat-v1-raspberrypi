@@ -34,6 +34,10 @@ body {
 .wrapper {
 	flex: 1;
 	background-color: #f0f0f5;
-	padding: 20px;
+	padding: 10px;
+}
+
+h2 {
+	margin: 0;
 }
 </style>

@@ -14,7 +14,7 @@ function createWindow() {
 	// Create the browser window.
 	win = new BrowserWindow({
 		width: 800,
-		height: 600,
+		height: 480,
 		webPreferences: {
 			// This script will be loaded before other scripts run in the page. It will always have
 			// access to node APIs no matter whether node integration is turned on or off. The value

@@ -1,5 +1,28 @@
+<style scoped>
+.defaultButton {
+	border: 2px;
+	border-color: #35495e;
+	border-style: solid;
+	border-radius: 10px;
+	font-weight: bold;
+	font-size: 18px;
+	padding: 18px;
+}
+
+.button-primary {
+	background-color: #41b883;
+	color: white;
+}
+.button-info {
+	background-color: white;
+	color: #41b883;
+	font-size: 14px;
+	padding: 14px;
+}
+</style>
+
 <template>
-	<button :style="buttonStyle" @click="onClick()">
+	<button :class="['defaultButton', 'button-' + type]" @click="onClick()">
 		{{ label }}
 	</button>
 </template>
@@ -12,20 +35,12 @@ export default {
 			type: String,
 			default: 'Button',
 		},
-	},
-	data: () => ({
-		buttonStyle: {
-			border: '2px',
-			borderColor: '#35495E',
-			borderStyle: 'solid',
-			borderRadius: '10px',
-			backgroundColor: '#41B883',
-			color: 'white',
-			fontWeight: 'bold',
-			fontSize: '18px',
-			padding: '18px',
+		type: {
+			type: String,
+			default: 'primary',
+			validator: value => ['primary', 'info'].indexOf(value) >= 0,
 		},
-	}),
+	},
 	methods: {
 		onClick() {
 			this.$emit('on-click');

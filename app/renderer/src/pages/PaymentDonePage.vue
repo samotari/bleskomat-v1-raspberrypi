@@ -1,17 +1,19 @@
 <template>
-	<div class="wrapper" @click="goToLanding()">
-		<main>
-			<img src="../assets/checkbox.svg" />
+	<PageTemplate @on-click="goToLanding()">
+		<template v-slot:title>
 			<h2>Success!</h2>
-		</main>
-	</div>
+		</template>
+		<img src="../assets/checkbox.svg" />
+	</PageTemplate>
 </template>
 
 <script>
+import PageTemplate from '../components/PageTemplate';
 import config from '../config';
 
 export default {
 	name: 'PaymentDonePage',
+	components: { PageTemplate },
 	data() {
 		return {
 			toToLandingTimeOut: null,
@@ -38,8 +40,7 @@ export default {
 </script>
 
 <style scoped>
-main img {
-	width: 40%;
-	margin-top: 5rem;
+img {
+	height: 40%;
 }
 </style>
