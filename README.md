@@ -41,6 +41,25 @@ npm run build:dev:watch
 If you make any modifications in `app/renderer`, the build process will trigger automatically and you can see your changes in the Electron app by reloading the app (e.g. <kbd>CMD</kbd>+<kbd>R</kbd> on Mac, <kbd>CTRL</kbd>+<kbd>R</kbd> on Windows and Linux).
 
 
+### Mock Paper Money Reader
+
+If you don't have the physical paper money reader - no worries! It is possible to create a virtual paper-money-reader device that you can use to mock the serial output of the real thing.
+
+First step is to create a mock serialport device. Run the following in a bash terminal:
+```bash
+npm run mock:serialports
+```
+Note that this script requires the `socat` utility - which you should be able to install under a debian-based system as follows: `sudo apt-get install socat`
+
+In another terminal window, run the following:
+```bash
+npm run mock:paper-money-reader
+```
+Press <kbd>1</kbd> to send the serial inputs as if a 5 EUR note was entered into the real paper money reader.
+
+Restart the app in yet another terminal and now you should be able to send mock notes.
+
+
 ## Building App Packages
 
 This project uses [electron-builder](https://www.electron.build/) to build packages for various platforms.
