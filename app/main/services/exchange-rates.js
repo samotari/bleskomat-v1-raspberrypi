@@ -2,6 +2,7 @@ const _ = require('underscore');
 const async = require('async');
 const Handlebars = require('handlebars');
 const request = require('request');
+const logger = require('../logger');
 
 module.exports = {
 	defaultOptions: {
@@ -35,7 +36,7 @@ module.exports = {
 			_.bind(function(error, result) {
 				if (error || !result) {
 					if (error) {
-						console.log(error);
+						logger.error(error);
 					}
 					error = new Error(
 						this.formatText(
