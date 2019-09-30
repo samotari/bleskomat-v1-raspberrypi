@@ -1,6 +1,16 @@
+<style scoped>
+.landing-page-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+</style>
+
 <template>
 	<PageTemplate>
-		<Button label="Get Started" @on-click="start()" />
+		<div class="landing-page-container">
+			<Button label="Get Started" @on-click="start()" />
+		</div>
 	</PageTemplate>
 </template>
 

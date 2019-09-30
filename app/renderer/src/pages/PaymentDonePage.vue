@@ -3,7 +3,9 @@
 		<template v-slot:title>
 			<h2>Success!</h2>
 		</template>
-		<img src="../assets/checkbox.svg" />
+		<div class="payment-done-page-container">
+			<img src="../assets/checkbox.svg" />
+		</div>
 	</PageTemplate>
 </template>
 
@@ -42,5 +44,10 @@ export default {
 <style scoped>
 img {
 	height: 40%;
+}
+.payment-done-page-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 </style>
