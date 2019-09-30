@@ -29,6 +29,7 @@ canvas {
 </template>
 
 <script>
+import _ from 'underscore';
 import async from 'async';
 import jsQR from 'jsqr';
 import Button from '../components/Button';
@@ -41,7 +42,7 @@ export default {
 			{ video: true, audio: false },
 			localMediaStream => {
 				const video = document.querySelector('video');
-				video.srcObject = localMediaStream;
+				video.srcObject = this.localMediaStream = localMediaStream;
 				video.autoplay = true;
 				this.startReadingQrCode();
 			},
@@ -49,6 +50,15 @@ export default {
 				console.log(error); // eslint-disable-line no-console
 			},
 		);
+	},
+	destroyed() {
+		if (this.localMediaStream) {
+			if (typeof this.localMediaStream.getVideoTracks === 'function') {
+				const tracks = this.localMediaStream.getVideoTracks();
+				_.invoke(tracks, 'stop');
+			}
+		}
+		this.localMediaStream = null;
 	},
 	methods: {
 		startReadingQrCode() {
