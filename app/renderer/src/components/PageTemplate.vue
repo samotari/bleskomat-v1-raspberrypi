@@ -63,11 +63,6 @@ export default {
 	},
 	mounted() {
 		this.$store.dispatch('fetchRates');
-		const ipcRenderer = window.ipcRenderer;
-		ipcRenderer.on('lnd.Lightning.getInfo', (event, result) => {
-			console.log(result); // eslint-disable-line no-console
-		});
-		ipcRenderer.send('lnd', 'Lightning', 'getInfo');
 	},
 	methods: {
 		start() {
