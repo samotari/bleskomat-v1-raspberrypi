@@ -138,13 +138,13 @@ export default {
 		async decodePayReq(payReq) {
 			const ipcRenderer = window.ipcRenderer;
 			return new Promise((resolve, reject) => {
-				ipcRenderer.on('lnd.Lightning.decodePayReq', (event, result) => {
+				ipcRenderer.on('decode-payreq-success', (event, result) => {
 					resolve(result);
 				});
-				ipcRenderer.on('lnd.Lightning.decodePayReq.error', (event, result) => {
+				ipcRenderer.on('decode-payreq-error', (event, result) => {
 					reject(result);
 				});
-				ipcRenderer.send('lnd', 'Lightning', 'decodePayReq', {
+				ipcRenderer.send('decode-payreq', {
 					pay_req: payReq,
 				});
 			});

@@ -57,7 +57,18 @@ export default {
 	},
 	methods: {
 		done() {
-			this.$router.push('/payment-done');
+			if (this.satoshis === 0) {
+				return;
+			}
+			const ipcRenderer = window.ipcRenderer;
+
+			ipcRenderer.on('send-payment-success', () => {
+				this.$router.push('/payment-done');
+			});
+			ipcRenderer.on('send-payment-error', () => {
+				// TODO: handle error in the UI.
+			});
+			ipcRenderer.send('send-payment');
 		},
 	},
 };

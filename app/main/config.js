@@ -14,6 +14,9 @@ module.exports = {
 		cert: process.env.BLESKOMAT_LND_CERT,
 		macaroon: process.env.BLESKOMAT_LND_MACAROON,
 	},
+	lightning: {
+		finalCltvDelta: 144,
+	},
 	format: {
 		numbers: {
 			BigNumber: {
