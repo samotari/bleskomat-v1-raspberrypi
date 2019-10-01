@@ -17,18 +17,17 @@
 					:czk="czk"
 					:satoshis="satoshis"
 				/>
-				<article class="actions">
-					<p class="light">
-						Press button when finished
-					</p>
+				<div class="actions">
 					<Button label="Done" @on-click="done()" />
-				</article>
+					<Button type="info" label="Cancel" @on-click="cancel()" />
+				</div>
 			</section>
 		</div>
 	</PageTemplate>
 </template>
 
 <script>
+import _ from 'underscore';
 import Button from '../components/Button';
 import InsertedMoney from '../components/InsertedMoney';
 import PageTemplate from '../components/PageTemplate';
@@ -55,18 +54,39 @@ export default {
 		});
 		ipcRenderer.send('start-receiving-bill-notes');
 	},
+	destroyed() {
+		const ipcRenderer = window.ipcRenderer;
+		ipcRenderer.removeAllListeners('send-payment');
+	},
 	methods: {
+		cancel() {
+			if (
+				this.satoshis === 0 ||
+				confirm('Are you sure that you want to cancel?')
+			) {
+				this.$router.push('/landing-page');
+			}
+		},
 		done() {
 			if (this.satoshis === 0) {
-				return;
+				return alert('Must enter at least one bank note.');
 			}
 			const ipcRenderer = window.ipcRenderer;
-
-			ipcRenderer.on('send-payment-success', () => {
+			ipcRenderer.on('send-payment', (event, result) => {
+				if (result && result.error) {
+					let error;
+					if (_.isString(result.error)) {
+						error = result.error;
+					} else if (_.isObject(result.error)) {
+						if (_.isString(result.error.details)) {
+							error = result.error.details;
+						} else {
+							error = JSON.stringify(result.error);
+						}
+					}
+					return alert(error);
+				}
 				this.$router.push('/payment-done');
-			});
-			ipcRenderer.on('send-payment-error', () => {
-				// TODO: handle error in the UI.
 			});
 			ipcRenderer.send('send-payment');
 		},
@@ -81,7 +101,9 @@ export default {
 	justify-content: space-around;
 }
 .inserted-money-receipt {
-	width: 30%;
+	box-sizing: border-box;
+	width: 60%;
+	float: left;
 }
 section.invoice-detail {
 	text-align: left;
@@ -90,9 +112,14 @@ section.invoice-detail {
 	margin-bottom: 40px;
 }
 section.inserted-money {
-	display: flex;
-	justify-content: space-around;
-	align-items: flex-end;
+	width: 100%;
+	display: inline-block;
+	box-sizing: border-box;
+	padding: 0 10%;
+}
+.actions {
+	width: 40%;
+	float: left;
 }
 p {
 	margin: 0;

@@ -66,6 +66,8 @@ export default {
 			}
 		}
 		this.localMediaStream = null;
+		const ipcRenderer = window.ipcRenderer;
+		ipcRenderer.removeAllListeners('decode-payreq');
 	},
 	methods: {
 		startReadingQrCode() {
@@ -82,7 +84,6 @@ export default {
 				},
 				async () => {
 					if (!this.canceled && this.qrcode) {
-						console.log(`Found QR code! --> "${this.qrcode}"`); // eslint-disable-line no-console
 						try {
 							const decodedPayReq = await this.decodePayReq(this.qrcode);
 							this.$router.push({
@@ -90,8 +91,8 @@ export default {
 								params: { decodedPayReq: decodedPayReq },
 							});
 						} catch (error) {
-							console.log('QR code not supported', error); // eslint-disable-line no-console
 							this.qrcode = null;
+							alert(error);
 							this.startReadingQrCode();
 						}
 					}
@@ -138,11 +139,11 @@ export default {
 		async decodePayReq(payReq) {
 			const ipcRenderer = window.ipcRenderer;
 			return new Promise((resolve, reject) => {
-				ipcRenderer.on('decode-payreq-success', (event, result) => {
+				ipcRenderer.on('decode-payreq', (event, result) => {
+					if (result.error) {
+						return reject(result.error);
+					}
 					resolve(result);
-				});
-				ipcRenderer.on('decode-payreq-error', (event, result) => {
-					reject(result);
 				});
 				ipcRenderer.send('decode-payreq', {
 					pay_req: payReq,

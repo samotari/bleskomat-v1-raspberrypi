@@ -33,7 +33,8 @@
 .total-satoshis,
 .total {
 	grid-row: 4 / 4;
-	font-size: 20px;
+	font-size: 17px;
+	white-space: nowrap;
 }
 
 .total {

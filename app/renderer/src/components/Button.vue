@@ -8,7 +8,9 @@
 	font-size: 18px;
 	padding: 18px;
 }
-
+.defaultButton + .defaultButton {
+	margin-left: 5px;
+}
 .button-primary {
 	background-color: #41b883;
 	color: white;
@@ -16,8 +18,6 @@
 .button-info {
 	background-color: white;
 	color: #41b883;
-	font-size: 14px;
-	padding: 14px;
 }
 </style>
 
