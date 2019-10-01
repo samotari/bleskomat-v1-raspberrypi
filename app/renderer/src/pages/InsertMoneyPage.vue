@@ -3,7 +3,7 @@
 		<template v-slot:title>
 			<h2>Enter cash</h2>
 		</template>
-		<div class="wrapper">
+		<div class="insert-money-page-container">
 			<section class="invoice-detail">
 				<p class="light label">
 					Destination
@@ -11,22 +11,12 @@
 				<p>{{ destination }}</p>
 			</section>
 			<section class="inserted-money">
-				<article>
-					<table>
-						<tr>
-							<td></td>
-							<td>{{ eur }} EUR</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td>{{ czk }} CZK</td>
-						</tr>
-						<tr class="total-bitcoin">
-							<td></td>
-							<td>{{ satoshis }} sats</td>
-						</tr>
-					</table>
-				</article>
+				<InsertedMoney
+					class="inserted-money-receipt"
+					:eur="eur"
+					:czk="czk"
+					:satoshis="satoshis"
+				/>
 				<article class="actions">
 					<p class="light">
 						Press button when finished
@@ -40,11 +30,12 @@
 
 <script>
 import Button from '../components/Button';
+import InsertedMoney from '../components/InsertedMoney';
 import PageTemplate from '../components/PageTemplate';
 
 export default {
 	name: 'InsertMoneyPage',
-	components: { Button, PageTemplate },
+	components: { Button, InsertedMoney, PageTemplate },
 	data() {
 		return {
 			eur: 0,
@@ -73,31 +64,24 @@ export default {
 </script>
 
 <style scoped>
-.wrapper {
+.insert-money-page-container {
 	display: flex;
 	flex-direction: column;
+	justify-content: space-around;
 }
-table {
-	text-align: left;
-	font-weight: bold;
-	border-collapse: collapse;
-}
-table td {
-	min-width: 20px;
-}
-.total-bitcoin td {
-	margin-top: 8px;
-	padding-top: 4px;
-	border-top: 2px solid rgba(44, 62, 80, 0.7);
+.inserted-money-receipt {
+	width: 30%;
 }
 section.invoice-detail {
 	text-align: left;
 	align-self: center;
 	font-weight: bold;
+	margin-bottom: 40px;
 }
 section.inserted-money {
-	justify-content: space-around;
 	display: flex;
+	justify-content: space-around;
+	align-items: flex-end;
 }
 p {
 	margin: 0;

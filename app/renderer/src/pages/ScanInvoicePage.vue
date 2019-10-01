@@ -1,4 +1,9 @@
 <style scoped>
+.scan-invoice-page-container {
+	display: flex;
+	align-items: center;
+	justify-content: space-evenly;
+}
 video {
 	width: 100%;
 	max-width: 360px;
@@ -17,13 +22,15 @@ canvas {
 		<template v-slot:title>
 			<h3>Scan your invoice</h3>
 		</template>
-		<div id="video">
-			<video></video>
-			<canvas></canvas>
-		</div>
+		<div class="scan-invoice-page-container">
+			<div id="video">
+				<video></video>
+				<canvas></canvas>
+			</div>
 
-		<div class="actions">
-			<Button type="info" label="Cancel" @on-click="cancel()" />
+			<div class="actions">
+				<Button type="info" label="Cancel" @on-click="cancel()" />
+			</div>
 		</div>
 	</PageTemplate>
 </template>

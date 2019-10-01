@@ -10,10 +10,6 @@ header > * {
 }
 
 main {
-	display: flex;
-	justify-content: space-around;
-	align-items: center;
-	flex: 1;
 	padding: 10px 0;
 }
 
