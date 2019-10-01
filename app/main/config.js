@@ -7,12 +7,15 @@ if (app) {
 
 module.exports = {
 	env: process.env.NODE_ENV || 'dev',
-	appPath: app.getAppPath(),
+	appPath: (app && app.getAppPath()) || null,
 	logsPath: (app && app.getPath('logs')) || null,
 	lnd: {
 		host: process.env.BLESKOMAT_LND_HOST,
 		cert: process.env.BLESKOMAT_LND_CERT,
 		macaroon: process.env.BLESKOMAT_LND_MACAROON,
+	},
+	lightning: {
+		finalCltvDelta: 144,
 	},
 	format: {
 		numbers: {

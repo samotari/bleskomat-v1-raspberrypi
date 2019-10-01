@@ -72,7 +72,34 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-let ratesStored;
+let exchangeProcess = {
+	rates: null,
+	payReq: null,
+	payReqDecoded: null,
+	eur: new BigNumber(0),
+	czk: new BigNumber(0),
+	calculate: {
+		satoshis: function() {
+			const eur2btc = _.find(
+				exchangeProcess.rates,
+				rate => rate.currency.symbol === 'EUR',
+			);
+			const czk2btc = _.find(
+				exchangeProcess.rates,
+				rate => rate.currency.symbol === 'CZK',
+			);
+			const eurInBtc = exchangeProcess.eur.dividedBy(eur2btc.rate);
+			const czkInBtc = exchangeProcess.czk.dividedBy(czk2btc.rate);
+			return Math.floor(
+				czkInBtc
+					.plus(eurInBtc)
+					.times(1e8)
+					.toNumber(),
+			);
+		},
+	},
+};
+
 ipcMain.on('get-exchange-rates', function(event) {
 	async.map(
 		config.supportedCurrencies,
@@ -97,7 +124,7 @@ ipcMain.on('get-exchange-rates', function(event) {
 			});
 		},
 		function(error, results) {
-			ratesStored = results;
+			exchangeProcess.rates = results;
 			const rates = _.chain(results)
 				.compact()
 				.map(function(result) {
@@ -123,50 +150,97 @@ ipcMain.on('get-exchange-rates', function(event) {
 	);
 });
 
+let port;
+try {
+	port = services.paperMoneyReader.connect().port;
+} catch (error) {
+	logger.error(error);
+}
+
 ipcMain.on('start-receiving-bill-notes', event => {
-	const paperMoney = config.paperMoneyReader.notes;
-	const { port } = services.paperMoneyReader.connect();
-
-	let eur = new BigNumber(0);
-	let czk = new BigNumber(0);
-
+	logger.info('start-receiving-bill-notes');
+	exchangeProcess.eur = new BigNumber(0);
+	exchangeProcess.czk = new BigNumber(0);
+	port.removeAllListeners('data');
+	const notes = config.paperMoneyReader.notes;
 	port.on('data', data => {
-		const command = data.toString();
-		const inserted = paperMoney[command];
-		const czk2btc = _.find(ratesStored, rate => rate.currency.symbol === 'CZK');
-		const eur2btc = _.find(ratesStored, rate => rate.currency.symbol === 'EUR');
-		if (inserted) {
-			if (inserted.currency === 'EUR') {
-				eur = eur.plus(Number(inserted.amount));
+		logger.info('PaperMoneyReader.data:', data);
+		let command = data[0];
+
+		logger.info('PaperMoneyReader.command:', command);
+		const note = notes[command];
+		if (!note) {
+			logger.info('PaperMoneyReader: Unrecognized command');
+			return;
+		}
+		logger.info('PaperMoneyReader.note:', JSON.stringify(note));
+		if (note) {
+			if (note.currency === 'EUR') {
+				exchangeProcess.eur = exchangeProcess.eur.plus(note.amount);
 			}
-			if (inserted.currency === 'CZK') {
-				czk = czk.plus(inserted.amount);
+			if (note.currency === 'CZK') {
+				exchangeProcess.czk = exchangeProcess.czk.plus(note.amount);
 			}
-			const eurInBtc = eur.dividedBy(eur2btc.rate);
-			const czkInBtc = czk.dividedBy(czk2btc.rate);
-			const satoshis = Math.floor(
-				czkInBtc
-					.plus(eurInBtc)
-					.times(1e8)
-					.toNumber(),
-			);
+			const satoshis = exchangeProcess.calculate.satoshis();
 			event.reply('received-bill-note', {
-				eur: eur.toString(),
-				czk: czk.toString(),
+				eur: exchangeProcess.eur.toNumber(),
+				czk: exchangeProcess.czk.toNumber(),
 				satoshis: satoshis,
 			});
 		}
 	});
 });
 
-ipcMain.on('lnd', function(event, service, method, payload) {
-	payload = payload || {};
-	services.lnd.exec(service, method, payload, function(error, result) {
-		if (error) {
-			logger.error(error);
-			event.reply(`lnd.${service}.${method}.error`);
-		} else {
-			event.reply(`lnd.${service}.${method}`, result);
-		}
-	});
+ipcMain.on('decode-payreq', (event, payload) => {
+	const { pay_req } = payload;
+	services.lnd.exec(
+		'Lightning',
+		'decodePayReq',
+		{
+			pay_req: pay_req,
+		},
+		(error, result) => {
+			if (error) {
+				logger.error('DecodePaymentRequest.error:', error);
+				event.reply('decode-payreq', { error: error });
+			} else {
+				exchangeProcess.payReq = pay_req;
+				exchangeProcess.payReqDecoded = result;
+				logger.info('DecodePaymentRequest.success:', result);
+				event.reply('decode-payreq', result);
+			}
+		},
+	);
+});
+
+ipcMain.on('send-payment', event => {
+	const satoshis = exchangeProcess.calculate.satoshis();
+	const paymentOptions = {
+		dest_string: exchangeProcess.payReqDecoded.destination,
+		amt: satoshis,
+		final_cltv_delta: config.lightning.finalCltvDelta,
+		payment_hash_string: exchangeProcess.payReqDecoded.payment_hash,
+	};
+
+	logger.info('paymentOptions', paymentOptions);
+
+	services.lnd.exec(
+		'Lightning',
+		'sendPaymentSync',
+		paymentOptions,
+		(error, result) => {
+			if (error) {
+				logger.error('SendPayment.error:', error);
+				event.reply('send-payment', { error: error });
+			} else if (result.payment_error) {
+				logger.error('SendPayment.error:', result.payment_error);
+				event.reply('send-payment', { error: result.payment_error });
+			} else {
+				logger.info('SendPayment.success:', result);
+				event.reply('send-payment');
+			}
+			exchangeProcess.payReq = null;
+			exchangeProcess.payReqDecoded = null;
+		},
+	);
 });
