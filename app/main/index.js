@@ -144,7 +144,12 @@ ipcMain.on('start-receiving-bill-notes', event => {
 			}
 			const eurInBtc = eur.dividedBy(eur2btc.rate);
 			const czkInBtc = czk.dividedBy(czk2btc.rate);
-			const satoshis = Math.floor(czkInBtc.plus(eurInBtc).times(1e8).toNumber());
+			const satoshis = Math.floor(
+				czkInBtc
+					.plus(eurInBtc)
+					.times(1e8)
+					.toNumber(),
+			);
 			event.reply('received-bill-note', {
 				eur: eur.toString(),
 				czk: czk.toString(),

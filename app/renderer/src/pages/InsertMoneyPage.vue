@@ -13,9 +13,9 @@
 			<section class="inserted-money">
 				<InsertedMoney
 					class="inserted-money-receipt"
-					v-bind:eur="eur"
-					v-bind:czk="czk"
-					v-bind:satoshis="satoshis"
+					:eur="eur"
+					:czk="czk"
+					:satoshis="satoshis"
 				/>
 				<article class="actions">
 					<p class="light">
