@@ -165,12 +165,8 @@ ipcMain.on('start-receiving-bill-notes', event => {
 	const notes = config.paperMoneyReader.notes;
 	port.on('data', data => {
 		logger.info('PaperMoneyReader.data:', data);
-		let command;
-		if (data instanceof Buffer) {
-			command = data.toString();
-		} else {
-			command = data[0];
-		}
+		let command = data[0];
+
 		logger.info('PaperMoneyReader.command:', command);
 		const note = notes[command];
 		if (!note) {
