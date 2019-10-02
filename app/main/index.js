@@ -10,11 +10,14 @@ const logger = require('./logger');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
+const fullscreen = config.env !== 'dev';
 
 function createWindow() {
 	// Create the browser window.
 	win = new BrowserWindow({
-		fullscreen: config.env === 'production',
+		width: 800,
+		height: 480,
+		fullscreen: fullscreen,
 		webPreferences: {
 			// This script will be loaded before other scripts run in the page. It will always have
 			// access to node APIs no matter whether node integration is turned on or off. The value
@@ -23,6 +26,10 @@ function createWindow() {
 			preload: path.join(config.appPath, 'main', 'preload.js'),
 		},
 	});
+
+	if (fullscreen) {
+		win.maximize();
+	}
 
 	// and load the index.html of the app.
 	const indexFilePath = path.join(
