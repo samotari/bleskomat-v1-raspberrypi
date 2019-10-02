@@ -4,25 +4,31 @@ header {
 	justify-content: space-between;
 	align-items: center;
 }
-
 header > * {
 	flex: 1;
 }
-
+footer p {
+	font-size: 16px;
+	line-height: 10px;
+	letter-spacing: 1px;
+}
+footer p.project-url {
+	font-size: 14px;
+	font-weight: 100;
+	font-style: italic;
+	letter-spacing: 2px;
+}
 main {
 	padding: 10px 0;
 }
-
 .wrapper {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 }
-
 .bitcoin-image {
 	text-align: left;
 }
-
 .bitcoin-image img {
 	max-width: 64px;
 }
@@ -40,7 +46,10 @@ main {
 		<main>
 			<slot></slot>
 		</main>
-		<footer>Bleskomat, <em>Lightning Network ATM</em></footer>
+		<footer>
+			<p><strong>Bleskomat</strong> - The Open Lightning ATM</p>
+			<p class="project-url">github.com/samotari/bleskomat</p>
+		</footer>
 	</div>
 </template>
 
