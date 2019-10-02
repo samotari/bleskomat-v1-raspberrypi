@@ -140,8 +140,18 @@ export default {
 			const ipcRenderer = window.ipcRenderer;
 			return new Promise((resolve, reject) => {
 				ipcRenderer.on('decode-payreq', (event, result) => {
-					if (result.error) {
-						return reject(result.error);
+					if (result && result.error) {
+						let error;
+						if (_.isString(result.error)) {
+							error = result.error;
+						} else if (_.isObject(result.error)) {
+							if (_.isString(result.error.details)) {
+								error = result.error.details;
+							} else {
+								error = JSON.stringify(result.error);
+							}
+						}
+						return reject(error);
 					}
 					resolve(result);
 				});
