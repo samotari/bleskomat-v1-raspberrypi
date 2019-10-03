@@ -15,13 +15,17 @@
 }
 
 .inserted-fiat,
-.total-satoshis,
+.total-inserted,
+.total-fee,
+.total-received,
 .divider {
 	grid-column: 2 / 2;
 }
 
 .inserted-fiat,
-.total-satoshis {
+.total-inserted,
+.total-fee,
+.total-received {
 	justify-self: flex-end;
 	padding: 0 20px;
 }
@@ -30,14 +34,30 @@
 	border: 1px solid black;
 }
 
-.total-satoshis,
-.total {
+.inserted,
+.total-inserted {
 	grid-row: 4 / 4;
 	font-size: 17px;
 	white-space: nowrap;
 }
 
-.total {
+.fee,
+.total-fee {
+	grid-row: 5 / 5;
+	font-size: 17px;
+	white-space: nowrap;
+}
+
+.receive,
+.total-received {
+	grid-row: 6 / 6;
+	font-size: 17px;
+	white-space: nowrap;
+}
+
+.fee,
+.total,
+.receive {
 	grid-column: 1 / 1;
 }
 </style>
@@ -47,10 +67,18 @@
 		<div class="inserted-fiat">{{ eur }} EUR</div>
 		<div class="inserted-fiat">{{ czk }} CZK</div>
 		<div class="divider"></div>
-		<div class="total">
-			Total:
+		<div class="inserted">
+			You inserted:
 		</div>
-		<div class="total-satoshis">{{ satoshis }} sats</div>
+		<div class="fee">
+			Fee:
+		</div>
+		<div class="receive">
+			You will receive:
+		</div>
+		<div class="total-inserted">{{ satoshis }} sats</div>
+		<div class="total-fee">{{ fee }} sats</div>
+		<div class="total-received">{{ satoshisMinusFee }} sats</div>
 	</div>
 </template>
 
@@ -67,6 +95,14 @@ export default {
 			default: 0,
 		},
 		satoshis: {
+			type: Number,
+			default: 0,
+		},
+		fee: {
+			type: Number,
+			default: 0,
+		},
+		satoshisMinusFee: {
 			type: Number,
 			default: 0,
 		},

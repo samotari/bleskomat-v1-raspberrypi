@@ -15,6 +15,8 @@
 					class="inserted-money-receipt"
 					:eur="eur"
 					:czk="czk"
+					:fee="fee"
+					:satoshisMinusFee="satoshisMinusFee"
 					:satoshis="satoshis"
 				/>
 				<div class="actions">
@@ -39,7 +41,9 @@ export default {
 		return {
 			eur: 0,
 			czk: 0,
+			fee: 0,
 			satoshis: 0,
+			satoshisMinusFee: 0,
 			destination: null,
 		};
 	},
@@ -47,11 +51,16 @@ export default {
 		const { decodedPayReq } = this.$route.params;
 		this.destination = decodedPayReq.destination;
 		const ipcRenderer = window.ipcRenderer;
-		ipcRenderer.on('received-bill-note', (event, { czk, eur, satoshis }) => {
-			this.czk = czk;
-			this.eur = eur;
-			this.satoshis = satoshis;
-		});
+		ipcRenderer.on(
+			'received-bill-note',
+			(event, { czk, eur, fee, satoshisMinusFee, satoshis }) => {
+				this.czk = czk;
+				this.eur = eur;
+				this.fee = fee;
+				this.satoshisMinusFee = satoshisMinusFee;
+				this.satoshis = satoshis;
+			},
+		);
 		ipcRenderer.send('start-receiving-bill-notes');
 	},
 	destroyed() {

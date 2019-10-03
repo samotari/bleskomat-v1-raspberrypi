@@ -17,6 +17,9 @@ module.exports = {
 	lightning: {
 		finalCltvDelta: 144,
 	},
+	exchangeProcess: {
+		fee: '0.03',
+	},
 	format: {
 		numbers: {
 			BigNumber: {
