@@ -5,9 +5,7 @@
 		</template>
 		<div class="insert-money-page-container">
 			<section class="invoice-detail">
-				<p class="light label">
-					Destination
-				</p>
+				<p class="light label">Destination</p>
 				<p>{{ destination }}</p>
 			</section>
 			<section class="inserted-money">
@@ -15,9 +13,9 @@
 					class="inserted-money-receipt"
 					:eur="eur"
 					:czk="czk"
-					:fee="fee"
-					:satoshisMinusFee="satoshisMinusFee"
-					:satoshis="satoshis"
+					:amountWillReceive="amountWillReceive"
+					:feeToBePaid="feeToBePaid"
+					:feePercent="feePercent"
 				/>
 				<div class="actions">
 					<Button label="Done" @on-click="done()" />
@@ -41,9 +39,9 @@ export default {
 		return {
 			eur: 0,
 			czk: 0,
-			fee: 0,
-			satoshis: 0,
-			satoshisMinusFee: 0,
+			amountWillReceive: 0,
+			feeToBePaid: 0,
+			feePercent: 0,
 			destination: null,
 		};
 	},
@@ -53,12 +51,12 @@ export default {
 		const ipcRenderer = window.ipcRenderer;
 		ipcRenderer.on(
 			'received-bill-note',
-			(event, { czk, eur, fee, satoshisMinusFee, satoshis }) => {
+			(event, { czk, eur, amountWillReceive, feeToBePaid, feePercent }) => {
 				this.czk = czk;
 				this.eur = eur;
-				this.fee = fee;
-				this.satoshisMinusFee = satoshisMinusFee;
-				this.satoshis = satoshis;
+				this.amountWillReceive = amountWillReceive;
+				this.feeToBePaid = feeToBePaid;
+				this.feePercent = feePercent;
 			},
 		);
 		ipcRenderer.send('start-receiving-bill-notes');
@@ -70,14 +68,14 @@ export default {
 	methods: {
 		cancel() {
 			if (
-				this.satoshis === 0 ||
+				this.amountWillReceive === 0 ||
 				confirm('Are you sure that you want to cancel?')
 			) {
 				this.$router.push('/landing-page');
 			}
 		},
 		done() {
-			if (this.satoshis === 0) {
+			if (this.amountWillReceive === 0) {
 				return alert('Must enter at least one bank note.');
 			}
 			const ipcRenderer = window.ipcRenderer;
@@ -130,16 +128,16 @@ section.inserted-money {
 	width: 40%;
 	float: left;
 }
-p {
+.invoice-detail p {
 	margin: 0;
 	margin-bottom: 1rem;
 }
-p.light {
+.invoice-detail p.light {
 	color: rgba(44, 62, 80, 0.7);
 	font-size: 14px;
 	margin-bottom: 0.5rem;
 }
-p.label {
+.invoice-detail p.label {
 	font-size: 12px;
 	text-transform: uppercase;
 	margin-bottom: 0.2rem;

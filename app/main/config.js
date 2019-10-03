@@ -18,7 +18,7 @@ module.exports = {
 		finalCltvDelta: 144,
 	},
 	exchangeProcess: {
-		fee: '0.03',
+		fee: process.env.BLESKOMAT_FEE || 0,
 	},
 	format: {
 		numbers: {

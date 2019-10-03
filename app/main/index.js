@@ -183,10 +183,21 @@ ipcMain.on('start-receiving-bill-notes', event => {
 	exchangeProcess.czk = new BigNumber(0);
 	port.removeAllListeners('data');
 	const notes = config.paperMoneyReader.notes;
+	const sendBillNotesUpdate = function() {
+		const amountWillReceive = exchangeProcess.calculate.satoshisMinusFee();
+		const feeToBePaid = exchangeProcess.calculate.fee();
+		const feePercent = (new BigNumber(config.exchangeProcess.fee)).times(100).toNumber();
+		event.reply('received-bill-note', {
+			eur: exchangeProcess.eur.toNumber(),
+			czk: exchangeProcess.czk.toNumber(),
+			amountWillReceive,
+			feeToBePaid,
+			feePercent,
+		});
+	};
 	port.on('data', data => {
 		logger.info('PaperMoneyReader.data:', data);
 		let command = data[0];
-
 		logger.info('PaperMoneyReader.command:', command);
 		const note = notes[command];
 		if (!note) {
@@ -201,18 +212,10 @@ ipcMain.on('start-receiving-bill-notes', event => {
 			if (note.currency === 'CZK') {
 				exchangeProcess.czk = exchangeProcess.czk.plus(note.amount);
 			}
-			const satoshis = exchangeProcess.calculate.satoshis();
-			const fee = exchangeProcess.calculate.fee();
-			const satoshisMinusFee = exchangeProcess.calculate.satoshisMinusFee();
-			event.reply('received-bill-note', {
-				eur: exchangeProcess.eur.toNumber(),
-				czk: exchangeProcess.czk.toNumber(),
-				satoshis,
-				fee,
-				satoshisMinusFee,
-			});
 		}
+		sendBillNotesUpdate();
 	});
+	sendBillNotesUpdate();
 });
 
 ipcMain.on('decode-payreq', (event, payload) => {
