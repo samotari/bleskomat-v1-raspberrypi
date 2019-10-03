@@ -5,7 +5,9 @@
 		</template>
 		<div class="insert-money-page-container">
 			<section class="invoice-detail">
-				<p class="light label">Destination</p>
+				<p class="light label">
+					Destination
+				</p>
 				<p>{{ destination }}</p>
 			</section>
 			<section class="inserted-money">
@@ -13,9 +15,9 @@
 					class="inserted-money-receipt"
 					:eur="eur"
 					:czk="czk"
-					:amountWillReceive="amountWillReceive"
-					:feeToBePaid="feeToBePaid"
-					:feePercent="feePercent"
+					:amount-will-receive="amountWillReceive"
+					:fee-to-be-paid="feeToBePaid"
+					:fee-percent="feePercent"
 				/>
 				<div class="actions">
 					<Button label="Done" @on-click="done()" />

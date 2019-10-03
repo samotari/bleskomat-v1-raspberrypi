@@ -48,7 +48,9 @@ main {
 		</main>
 		<footer>
 			<p><strong>Bleskomat</strong> - The Open Lightning ATM</p>
-			<p class="project-url">github.com/samotari/bleskomat</p>
+			<p class="project-url">
+				github.com/samotari/bleskomat
+			</p>
 		</footer>
 	</div>
 </template>

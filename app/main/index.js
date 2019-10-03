@@ -97,16 +97,16 @@ let exchangeProcess = {
 			);
 			const eurInBtc = exchangeProcess.eur.dividedBy(eur2btc.rate);
 			const czkInBtc = exchangeProcess.czk.dividedBy(czk2btc.rate);
-			return (new BigNumber(czkInBtc))
-					.plus(eurInBtc)
-					.times(1e8)
-					.integerValue(BigNumber.ROUND_DOWN);
+			return new BigNumber(czkInBtc)
+				.plus(eurInBtc)
+				.times(1e8)
+				.integerValue(BigNumber.ROUND_DOWN);
 		},
 		fee: function() {
 			const satoshis = exchangeProcess.calculate.satoshis();
-			return (new BigNumber(satoshis))
-					.multipliedBy(config.exchangeProcess.fee)
-					.integerValue(BigNumber.ROUND_DOWN);
+			return new BigNumber(satoshis)
+				.multipliedBy(config.exchangeProcess.fee)
+				.integerValue(BigNumber.ROUND_DOWN);
 		},
 		satoshisMinusFee: function() {
 			const satoshis = exchangeProcess.calculate.satoshis();
@@ -147,7 +147,7 @@ ipcMain.on('get-exchange-rates', function(event) {
 					let value;
 					try {
 						BigNumber.config(config.format.numbers.BigNumber);
-						value = (new BigNumber(result.rate))
+						value = new BigNumber(result.rate)
 							.toFormat(config.format.numbers.decimals)
 							.toString();
 					} catch (error) {
@@ -181,7 +181,7 @@ ipcMain.on('start-receiving-bill-notes', event => {
 	const sendBillNotesUpdate = function() {
 		const amountWillReceive = exchangeProcess.calculate.satoshisMinusFee();
 		const feeToBePaid = exchangeProcess.calculate.fee();
-		const feePercent = (new BigNumber(config.exchangeProcess.fee)).times(100);
+		const feePercent = new BigNumber(config.exchangeProcess.fee).times(100);
 		event.reply('received-bill-note', {
 			eur: exchangeProcess.eur.toString(),
 			czk: exchangeProcess.czk.toString(),

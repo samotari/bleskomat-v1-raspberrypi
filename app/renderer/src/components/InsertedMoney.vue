@@ -44,32 +44,54 @@
 <template>
 	<div class="inserted-money-container">
 		<div class="row">
-			<div class="label">&nbsp;</div>
+			<div class="label">
+				&nbsp;
+			</div>
 			<div class="info">
-				<span class="info-value">{{ eur }}</span>
-				<span class="info-unit">EUR</span>
+				<span class="info-value">
+					{{ eur }}
+				</span>
+				<span class="info-unit">
+					EUR
+				</span>
 			</div>
 		</div>
 		<div class="row">
-			<div class="label">&nbsp;</div>
+			<div class="label">
+				&nbsp;
+			</div>
 			<div class="info">
-				<span class="info-value">{{ czk }}</span>
-				<span class="info-unit">CZK</span>
+				<span class="info-value">
+					{{ czk }}
+				</span>
+				<span class="info-unit">
+					CZK
+				</span>
 			</div>
 		</div>
 		<div class="divider"></div>
 		<div class="row">
-			<div class="label">You will receive:</div>
+			<div class="label">
+				You will receive:
+			</div>
 			<div class="info">
-				<span class="info-value">{{ amountWillReceive }}</span>
-				<span class="info-unit">sats</span>
+				<span class="info-value">
+					{{ amountWillReceive }}
+				</span>
+				<span class="info-unit">
+					sats
+				</span>
 			</div>
 		</div>
 		<div class="row">
 			<div class="label">Fees ({{ feePercent }}%):</div>
 			<div class="info">
-				<span class="info-value">{{ feeToBePaid }}</span>
-				<span class="info-unit">sats</span>
+				<span class="info-value">
+					{{ feeToBePaid }}
+				</span>
+				<span class="info-unit">
+					sats
+				</span>
 			</div>
 		</div>
 	</div>
