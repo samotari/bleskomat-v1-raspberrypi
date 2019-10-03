@@ -37,11 +37,11 @@ export default {
 	components: { Button, InsertedMoney, PageTemplate },
 	data() {
 		return {
-			eur: 0,
-			czk: 0,
-			amountWillReceive: 0,
-			feeToBePaid: 0,
-			feePercent: 0,
+			eur: '0',
+			czk: '0',
+			amountWillReceive: '0',
+			feeToBePaid: '0',
+			feePercent: '0',
 			destination: null,
 		};
 	},
@@ -66,16 +66,19 @@ export default {
 		ipcRenderer.removeAllListeners('send-payment');
 	},
 	methods: {
+		hasEnteredNotes: function() {
+			return this.amountWillReceive !== '0';
+		},
 		cancel() {
 			if (
-				this.amountWillReceive === 0 ||
+				this.hasEnteredNotes() ||
 				confirm('Are you sure that you want to cancel?')
 			) {
 				this.$router.push('/landing-page');
 			}
 		},
 		done() {
-			if (this.amountWillReceive === 0) {
+			if (!this.hasEnteredNotes()) {
 				return alert('Must enter at least one bank note.');
 			}
 			const ipcRenderer = window.ipcRenderer;

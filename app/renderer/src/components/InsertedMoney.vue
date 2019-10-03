@@ -80,24 +80,24 @@ export default {
 	name: 'InsertedMoney',
 	props: {
 		eur: {
-			type: Number,
-			default: 0,
+			type: String,
+			default: '0',
 		},
 		czk: {
-			type: Number,
-			default: 0,
+			type: String,
+			default: '0',
 		},
 		amountWillReceive: {
-			type: Number,
-			default: 0,
+			type: String,
+			default: '0',
 		},
 		feeToBePaid: {
-			type: Number,
-			default: 0,
+			type: String,
+			default: '0',
 		},
 		feePercent: {
-			type: Number,
-			default: 0,
+			type: String,
+			default: '0',
 		},
 	},
 };

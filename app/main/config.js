@@ -94,6 +94,10 @@ module.exports = {
 				amount: 5000,
 				currency: 'CZK',
 			},
+			99: {
+				amount: '0.01',
+				currency: 'EUR',
+			},
 		},
 	},
 };

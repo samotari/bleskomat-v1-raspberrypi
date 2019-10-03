@@ -97,25 +97,21 @@ let exchangeProcess = {
 			);
 			const eurInBtc = exchangeProcess.eur.dividedBy(eur2btc.rate);
 			const czkInBtc = exchangeProcess.czk.dividedBy(czk2btc.rate);
-			return Math.floor(
-				czkInBtc
+			return (new BigNumber(czkInBtc))
 					.plus(eurInBtc)
 					.times(1e8)
-					.toNumber(),
-			);
+					.integerValue(BigNumber.ROUND_DOWN);
 		},
 		fee: function() {
 			const satoshis = exchangeProcess.calculate.satoshis();
-			return Math.floor(
-				new BigNumber(satoshis)
+			return (new BigNumber(satoshis))
 					.multipliedBy(config.exchangeProcess.fee)
-					.toNumber(),
-			);
+					.integerValue(BigNumber.ROUND_DOWN);
 		},
 		satoshisMinusFee: function() {
 			const satoshis = exchangeProcess.calculate.satoshis();
 			const fee = exchangeProcess.calculate.fee();
-			return Math.floor(new BigNumber(satoshis).minus(fee).toNumber());
+			return satoshis.minus(fee);
 		},
 	},
 };
@@ -151,8 +147,7 @@ ipcMain.on('get-exchange-rates', function(event) {
 					let value;
 					try {
 						BigNumber.config(config.format.numbers.BigNumber);
-						// Invert the rate then apply currency-specific formatting.
-						value = new BigNumber(result.rate)
+						value = (new BigNumber(result.rate))
 							.toFormat(config.format.numbers.decimals)
 							.toString();
 					} catch (error) {
@@ -186,13 +181,13 @@ ipcMain.on('start-receiving-bill-notes', event => {
 	const sendBillNotesUpdate = function() {
 		const amountWillReceive = exchangeProcess.calculate.satoshisMinusFee();
 		const feeToBePaid = exchangeProcess.calculate.fee();
-		const feePercent = (new BigNumber(config.exchangeProcess.fee)).times(100).toNumber();
+		const feePercent = (new BigNumber(config.exchangeProcess.fee)).times(100);
 		event.reply('received-bill-note', {
-			eur: exchangeProcess.eur.toNumber(),
-			czk: exchangeProcess.czk.toNumber(),
-			amountWillReceive,
-			feeToBePaid,
-			feePercent,
+			eur: exchangeProcess.eur.toString(),
+			czk: exchangeProcess.czk.toString(),
+			amountWillReceive: amountWillReceive.toString(),
+			feeToBePaid: feeToBePaid.toString(),
+			feePercent: feePercent.toString(),
 		});
 	};
 	port.on('data', data => {
@@ -224,7 +219,6 @@ ipcMain.on('decode-payreq', (event, payload) => {
 	if (pay_req.indexOf(':') !== -1) {
 		pay_req = pay_req.split(':')[1];
 	}
-	console.log(pay_req);
 	services.lnd.exec(
 		'Lightning',
 		'decodePayReq',
