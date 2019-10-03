@@ -28,13 +28,15 @@ const path = require('path');
 const SerialPort = require('serialport');
 const config = require('../main/config');
 const mockDevicePath = path.join(__dirname, '..', 'dev', 'ttyMOCK1');
-const port1 = new SerialPort(mockDevicePath);
+const port = new SerialPort(mockDevicePath, {
+	baudRate: config.paperMoneyReader.baudRate,
+});
 const notes = _.chain(config.paperMoneyReader.notes).map(function(note, key) {
 	return [key.toString(), [note.amount, note.currency].join(' ')];
 }).object().value();
 
-port1.on('error', function(error) {
-	console.log(error);
+port.on('error', function(error) {
+	console.error(error);
 });
 
 const stdin = process.stdin;
@@ -56,7 +58,9 @@ stdin.on('data', _.debounce(function() {
 		console.log(`Keys not recognized: "${keys}"`);
 	} else {
 		console.log(`Sending "${note}"`);
-		port1.write(keys);
+		console.log(`Writing keys "${keys}"`);
+		const command = parseInt(keys);
+		port.write(Buffer.from([command]));
 	}
 	keys = '';
 }, 200));
