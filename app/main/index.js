@@ -85,16 +85,20 @@ let exchangeProcess = {
 	payReqDecoded: null,
 	eur: new BigNumber(0),
 	czk: new BigNumber(0),
+	find: {
+		rate: (symbol) => {
+			return _.chain(exchangeProcess.rates)
+				.compact()
+				.find(
+					rate => rate.currency.symbol === symbol
+				)
+				.value();
+		},
+	},
 	calculate: {
 		satoshis: function() {
-			const eur2btc = _.find(
-				exchangeProcess.rates,
-				rate => rate.currency.symbol === 'EUR',
-			);
-			const czk2btc = _.find(
-				exchangeProcess.rates,
-				rate => rate.currency.symbol === 'CZK',
-			);
+			const eur2btc = exchangeProcess.find.rate('EUR');
+			const czk2btc = exchangeProcess.find.rate('CZK');
 			const eurInBtc = exchangeProcess.eur.dividedBy(eur2btc.rate);
 			const czkInBtc = exchangeProcess.czk.dividedBy(czk2btc.rate);
 			return new BigNumber(czkInBtc)
@@ -262,11 +266,11 @@ ipcMain.on('send-payment', event => {
 				logger.error('SendPayment.error:', result.payment_error);
 				event.reply('send-payment', { error: result.payment_error });
 			} else {
+				exchangeProcess.payReq = null;
+				exchangeProcess.payReqDecoded = null;
 				logger.info('SendPayment.success:', result);
 				event.reply('send-payment');
 			}
-			exchangeProcess.payReq = null;
-			exchangeProcess.payReqDecoded = null;
 		},
 	);
 });

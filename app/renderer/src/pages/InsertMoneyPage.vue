@@ -61,6 +61,22 @@ export default {
 				this.feePercent = feePercent;
 			},
 		);
+		ipcRenderer.on('send-payment', (event, result) => {
+			if (result && result.error) {
+				let error;
+				if (_.isString(result.error)) {
+					error = result.error;
+				} else if (_.isObject(result.error)) {
+					if (_.isString(result.error.details)) {
+						error = result.error.details;
+					} else {
+						error = JSON.stringify(result.error);
+					}
+				}
+				return alert(error);
+			}
+			this.$router.push('/payment-done');
+		});
 		ipcRenderer.send('start-receiving-bill-notes');
 	},
 	destroyed() {
@@ -84,22 +100,6 @@ export default {
 				return alert('Must enter at least one bank note.');
 			}
 			const ipcRenderer = window.ipcRenderer;
-			ipcRenderer.on('send-payment', (event, result) => {
-				if (result && result.error) {
-					let error;
-					if (_.isString(result.error)) {
-						error = result.error;
-					} else if (_.isObject(result.error)) {
-						if (_.isString(result.error.details)) {
-							error = result.error.details;
-						} else {
-							error = JSON.stringify(result.error);
-						}
-					}
-					return alert(error);
-				}
-				this.$router.push('/payment-done');
-			});
 			ipcRenderer.send('send-payment');
 		},
 	},
