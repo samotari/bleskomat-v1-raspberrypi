@@ -1,56 +1,77 @@
 <style>
 .inserted-money-container {
-	padding: 20px;
 	background: rgba(255, 255, 255, 0.5);
-	border-radius: 5px;
 	border: 1px solid rgba(0, 0, 0, 0.1);
-	font-weight: bold;
-	display: grid;
-	grid-template-rows: 20px 20px 40px;
-	grid-template-columns: auto 1fr;
-	grid-row-gap: 5px;
-	grid-column-gap: 40px;
-	justify-content: center;
-	align-items: center;
+	border-radius: 5px;
+	box-sizing: border-box;
+	padding: 10px;
 }
-
-.inserted-fiat,
-.total-satoshis,
 .divider {
-	grid-column: 2 / 2;
+	width: 100%;
+	height: 2px;
+	background: black;
+	margin: 10px 0;
 }
-
-.inserted-fiat,
-.total-satoshis {
-	justify-self: flex-end;
-	padding: 0 20px;
+.row {
+	display: inline-block;
+	width: 100%;
+	vertical-align: top;
 }
-
-.divider {
-	border: 1px solid black;
-}
-
-.total-satoshis,
-.total {
-	grid-row: 4 / 4;
+.row .label,
+.row .info {
+	float: left;
 	font-size: 17px;
-	white-space: nowrap;
+	line-height: 28px;
+	box-sizing: border-box;
 }
-
-.total {
-	grid-column: 1 / 1;
+.row .label {
+	width: 60%;
+	font-weight: bold;
+	text-align: right;
+	padding-right: 10px;
+}
+.row .info {
+	width: 40%;
+	white-space: nowrap;
+	text-align: left;
+	padding-left: 10px;
+}
+.row .info-unit:not(:empty) {
+	margin-left: 5px;
 }
 </style>
 
 <template>
 	<div class="inserted-money-container">
-		<div class="inserted-fiat">{{ eur }} EUR</div>
-		<div class="inserted-fiat">{{ czk }} CZK</div>
-		<div class="divider"></div>
-		<div class="total">
-			Total:
+		<div class="row">
+			<div class="label">&nbsp;</div>
+			<div class="info">
+				<span class="info-value">{{ eur }}</span>
+				<span class="info-unit">EUR</span>
+			</div>
 		</div>
-		<div class="total-satoshis">{{ satoshis }} sats</div>
+		<div class="row">
+			<div class="label">&nbsp;</div>
+			<div class="info">
+				<span class="info-value">{{ czk }}</span>
+				<span class="info-unit">CZK</span>
+			</div>
+		</div>
+		<div class="divider"></div>
+		<div class="row">
+			<div class="label">You will receive:</div>
+			<div class="info">
+				<span class="info-value">{{ amountWillReceive }}</span>
+				<span class="info-unit">sats</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="label">Fees ({{ feePercent }}%):</div>
+			<div class="info">
+				<span class="info-value">{{ feeToBePaid }}</span>
+				<span class="info-unit">sats</span>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -66,7 +87,15 @@ export default {
 			type: Number,
 			default: 0,
 		},
-		satoshis: {
+		amountWillReceive: {
+			type: Number,
+			default: 0,
+		},
+		feeToBePaid: {
+			type: Number,
+			default: 0,
+		},
+		feePercent: {
 			type: Number,
 			default: 0,
 		},

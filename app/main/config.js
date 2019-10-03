@@ -17,6 +17,9 @@ module.exports = {
 	lightning: {
 		finalCltvDelta: 144,
 	},
+	exchangeProcess: {
+		fee: process.env.BLESKOMAT_FEE || 0,
+	},
 	format: {
 		numbers: {
 			BigNumber: {

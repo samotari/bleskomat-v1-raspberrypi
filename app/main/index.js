@@ -104,6 +104,19 @@ let exchangeProcess = {
 					.toNumber(),
 			);
 		},
+		fee: function() {
+			const satoshis = exchangeProcess.calculate.satoshis();
+			return Math.floor(
+				new BigNumber(satoshis)
+					.multipliedBy(config.exchangeProcess.fee)
+					.toNumber(),
+			);
+		},
+		satoshisMinusFee: function() {
+			const satoshis = exchangeProcess.calculate.satoshis();
+			const fee = exchangeProcess.calculate.fee();
+			return Math.floor(new BigNumber(satoshis).minus(fee).toNumber());
+		},
 	},
 };
 
@@ -170,10 +183,21 @@ ipcMain.on('start-receiving-bill-notes', event => {
 	exchangeProcess.czk = new BigNumber(0);
 	port.removeAllListeners('data');
 	const notes = config.paperMoneyReader.notes;
+	const sendBillNotesUpdate = function() {
+		const amountWillReceive = exchangeProcess.calculate.satoshisMinusFee();
+		const feeToBePaid = exchangeProcess.calculate.fee();
+		const feePercent = (new BigNumber(config.exchangeProcess.fee)).times(100).toNumber();
+		event.reply('received-bill-note', {
+			eur: exchangeProcess.eur.toNumber(),
+			czk: exchangeProcess.czk.toNumber(),
+			amountWillReceive,
+			feeToBePaid,
+			feePercent,
+		});
+	};
 	port.on('data', data => {
 		logger.info('PaperMoneyReader.data:', data);
 		let command = data[0];
-
 		logger.info('PaperMoneyReader.command:', command);
 		const note = notes[command];
 		if (!note) {
@@ -188,14 +212,10 @@ ipcMain.on('start-receiving-bill-notes', event => {
 			if (note.currency === 'CZK') {
 				exchangeProcess.czk = exchangeProcess.czk.plus(note.amount);
 			}
-			const satoshis = exchangeProcess.calculate.satoshis();
-			event.reply('received-bill-note', {
-				eur: exchangeProcess.eur.toNumber(),
-				czk: exchangeProcess.czk.toNumber(),
-				satoshis: satoshis,
-			});
 		}
+		sendBillNotesUpdate();
 	});
+	sendBillNotesUpdate();
 });
 
 ipcMain.on('decode-payreq', (event, payload) => {
@@ -221,10 +241,10 @@ ipcMain.on('decode-payreq', (event, payload) => {
 });
 
 ipcMain.on('send-payment', event => {
-	const satoshis = exchangeProcess.calculate.satoshis();
+	const amount = exchangeProcess.calculate.satoshisMinusFee();
 	const paymentOptions = {
 		dest_string: exchangeProcess.payReqDecoded.destination,
-		amt: satoshis,
+		amt: amount,
 		final_cltv_delta: config.lightning.finalCltvDelta,
 		payment_hash_string: exchangeProcess.payReqDecoded.payment_hash,
 	};
