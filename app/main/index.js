@@ -219,7 +219,12 @@ ipcMain.on('start-receiving-bill-notes', event => {
 });
 
 ipcMain.on('decode-payreq', (event, payload) => {
-	const { pay_req } = payload;
+	let { pay_req } = payload;
+	pay_req = pay_req.toLowerCase();
+	if (pay_req.indexOf(':') !== -1) {
+		pay_req = pay_req.split(':')[1];
+	}
+	console.log(pay_req);
 	services.lnd.exec(
 		'Lightning',
 		'decodePayReq',
