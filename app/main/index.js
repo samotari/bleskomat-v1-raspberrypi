@@ -115,7 +115,7 @@ let exchangeProcess = {
 		satoshisMinusFee: function() {
 			const satoshis = exchangeProcess.calculate.satoshis();
 			const fee = exchangeProcess.calculate.fee();
-			return satoshis.minus(fee);
+			return satoshis.minus(fee).toNumber();
 		},
 	},
 };
