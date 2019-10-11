@@ -1,5 +1,6 @@
 const { app } = require('electron');
 require('dotenv').config();
+const path = require('path');
 
 if (app) {
 	app.setAppLogsPath();
@@ -9,6 +10,15 @@ module.exports = {
 	env: process.env.NODE_ENV || 'dev',
 	appPath: (app && app.getAppPath()) || null,
 	logsPath: (app && app.getPath('logs')) || null,
+	db: {
+		knex: {
+			client: 'sqlite3',
+			connection: {
+				filename: (app && path.join(app.getPath('userData'), 'bleskomat.db.sqlite3')) || ':memory:',
+			},
+			useNullAsDefault: true,
+		},
+	},
 	lnd: {
 		host: process.env.BLESKOMAT_LND_HOST,
 		cert: process.env.BLESKOMAT_LND_CERT,
