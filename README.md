@@ -61,6 +61,20 @@ Press <kbd>1</kbd> to send the serial inputs as if a 5 EUR note was entered into
 
 Restart the app in yet another terminal and now you should be able to send mock notes.
 
+You might run into the following error message when trying to run the mock paper money reader:
+```
+Error: The module './bleskomat/app/node_modules/@serialport/bindings-dev/build/Release/bindings.node'
+was compiled against a different Node.js version using
+NODE_MODULE_VERSION 73. This version of Node.js requires
+NODE_MODULE_VERSION 64. Please try re-compiling or re-installing
+the module (for instance, using `npm rebuild` or `npm install`).
+```
+
+A temporary fix for this problem is to re-install the serialport bindings as follows:
+```bash
+npm install @serialport/bindings-dev@npm:@serialport/bindings@2.0.8
+```
+
 
 ## Building App Packages
 
