@@ -62,6 +62,7 @@ export default {
 			},
 		);
 		ipcRenderer.on('send-payment', (event, result) => {
+			this.$loading.hide();
 			if (result && result.error) {
 				let error;
 				if (_.isString(result.error)) {
@@ -100,6 +101,7 @@ export default {
 				return alert('Must enter at least one bank note.');
 			}
 			const ipcRenderer = window.ipcRenderer;
+			this.$loading.show();
 			ipcRenderer.send('send-payment');
 		},
 	},
