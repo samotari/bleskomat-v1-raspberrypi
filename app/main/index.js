@@ -223,48 +223,29 @@ ipcMain.on('decode-payreq', (event, payload) => {
 	if (pay_req.indexOf(':') !== -1) {
 		pay_req = pay_req.split(':')[1];
 	}
-	services.lnd.exec(
-		'Lightning',
-		'decodePayReq',
-		{
-			pay_req: pay_req,
-		},
-		(error, result) => {
-			if (error) {
-				logger.error('DecodePaymentRequest.error:', error);
-				event.reply('decode-payreq', { error: error });
-			} else {
-				exchangeProcess.payReq = pay_req;
-				exchangeProcess.payReqDecoded = result;
-				logger.info('DecodePaymentRequest.success:', result);
-				event.reply('decode-payreq', result);
-			}
-		},
+	services.lnd.decodePaymentRequest(pay_req, (error, result) => {
+		if (error) {
+			logger.error('DecodePaymentRequest.error:', error);
+			event.reply('decode-payreq', { error: error });
+		} else {
+			exchangeProcess.payReq = pay_req;
+			exchangeProcess.payReqDecoded = result;
+			logger.info('DecodePaymentRequest.success:', result);
+			event.reply('decode-payreq', result);
+		}
+	},
 	);
 });
 
 ipcMain.on('send-payment', event => {
-	const amount = exchangeProcess.calculate.satoshisMinusFee();
-	const paymentOptions = {
-		dest_string: exchangeProcess.payReqDecoded.destination,
-		amt: amount,
-		final_cltv_delta: config.lightning.finalCltvDelta,
-		payment_hash_string: exchangeProcess.payReqDecoded.payment_hash,
-	};
-
-	logger.info('paymentOptions', paymentOptions);
-
-	services.lnd.exec(
-		'Lightning',
-		'sendPaymentSync',
-		paymentOptions,
+	const newAmount = exchangeProcess.calculate.satoshisMinusFee();
+	services.lnd.payExtraToDecodedPaymentRequest(
+		exchangeProcess.payReqDecoded,
+		newAmount,
 		(error, result) => {
 			if (error) {
-				logger.error('SendPayment.error:', error);
+				logger.info('SendPayment.error:', error);
 				event.reply('send-payment', { error: error });
-			} else if (result.payment_error) {
-				logger.error('SendPayment.error:', result.payment_error);
-				event.reply('send-payment', { error: result.payment_error });
 			} else {
 				exchangeProcess.payReq = null;
 				exchangeProcess.payReqDecoded = null;
