@@ -86,12 +86,10 @@ let exchangeProcess = {
 	eur: new BigNumber(0),
 	czk: new BigNumber(0),
 	find: {
-		rate: (symbol) => {
+		rate: symbol => {
 			return _.chain(exchangeProcess.rates)
 				.compact()
-				.find(
-					rate => rate.currency.symbol === symbol
-				)
+				.find(rate => rate.currency.symbol === symbol)
 				.value();
 		},
 	},
@@ -245,7 +243,7 @@ ipcMain.on('send-payment', event => {
 		(error, result) => {
 			if (error) {
 				logger.info('SendPayment.error:', error);
-				event.reply('send-payment', { error: error });
+				event.reply('send-payment', { error: error.message });
 			} else {
 				exchangeProcess.payReq = null;
 				exchangeProcess.payReqDecoded = null;

@@ -84,7 +84,9 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="label">Fees ({{ feePercent }}%):</div>
+			<div class="label">
+				Fees ({{ feePercent }}%):
+			</div>
 			<div class="info">
 				<span class="info-value">
 					{{ feeToBePaid }}
