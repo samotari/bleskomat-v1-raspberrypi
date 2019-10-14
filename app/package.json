@@ -49,7 +49,7 @@
     "async": "3.1.0",
     "bignumber.js": "9.0.0",
     "dotenv": "8.1.0",
-    "handlebars": "4.1.2",
+    "handlebars": "4.4.3",
     "jsqr": "1.2.0",
     "ln-service": "git://github.com/samotari/ln-service.git#5164c3accde2f3b890521af3ecb2f90b4f81f0b5",
     "request": "2.88.0",
