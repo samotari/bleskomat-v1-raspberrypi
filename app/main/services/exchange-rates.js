@@ -4,8 +4,14 @@ const Handlebars = require('handlebars');
 const request = require('request');
 const logger = require('../logger');
 
+const db = require('./db');
+
 module.exports = {
 	defaultOptions: {
+		cache: {
+			key: 'exchange-rates',
+			maxAge: 5 * 60 * 1000,
+		},
 		currencies: {
 			from: null,
 			to: null,
@@ -31,27 +37,76 @@ module.exports = {
 			options = {};
 		}
 		options = _.defaults(options || {}, this.defaultOptions);
-		this.fetch(
-			options,
-			_.bind(function(error, result) {
-				if (error || !result) {
-					if (error) {
-						logger.error(error);
+		const cacheOptions = _.extend({}, options.cache);
+		cacheOptions.key += '-' + JSON.stringify(_.pick(options, 'provider', 'currencies'));
+		this.getFromCache(cacheOptions, (error, fromCache, expired) => {
+			if (error) return done(error);
+			if (fromCache && !expired) return done(null, fromCache);
+			this.fetch(
+				options,
+				(error, result) => {
+					if (error || !result) {
+						if (error) {
+							logger.error(error);
+						}
+						error = new Error(
+							this.formatText(
+								'Unsupported currency pair: "{{from}}_{{to}}"',
+								options.currencies,
+							),
+						);
+						return done(error);
 					}
-					error = new Error(
-						this.formatText(
-							'Unsupported currency pair: "{{from}}_{{to}}"',
-							options.currencies,
-						),
-					);
-					return done(error);
-				}
-				if (result) {
+					if (!result) {
+						return done();
+					}
 					result = result.toString();
-				}
-				done(null, result);
-			}, this),
-		);
+					cacheOptions.exists = !!fromCache;
+					this.saveToCache(cacheOptions, result, (error) => {
+						if (error) logger.error(error);
+						done(null, result);
+					});
+				},
+			);
+		});
+	},
+	getFromCache: function(options, done) {
+		db('cache')
+			.where('key', options.key)
+			.limit(1)
+			.then((result) => {
+				const row = result && result[0];
+				if (!row) return done();
+				const expired = options.maxAge && row.updated_at < Date.now() - options.maxAge;
+				done(null, row.data, expired);
+			})
+			.catch(done);
+	},
+	saveToCache: function(options, data, done) {
+		if (options.exists) {
+			db('cache')
+				.where('key', options.key)
+				.update({
+					data: data,
+					updated_at: Date.now(),
+				})
+				.then(function() {
+					done();
+				})
+				.catch(done);
+		} else {
+			db('cache')
+				.insert({
+					key: options.key,
+					data: data,
+					created_at: Date.now(),
+					updated_at: Date.now(),
+				})
+				.then(function() {
+					done();
+				})
+				.catch(done);
+		}
 	},
 	fetch: function(options, done) {
 		if (_.isFunction(options)) {
@@ -107,7 +162,7 @@ module.exports = {
 				method: 'GET',
 				url: url,
 			};
-			let parseResponseBody = _.bind(function(body) {
+			let parseResponseBody = (body) => {
 				try {
 					let data = JSON.parse(body);
 					if (jsonPath.error) {
@@ -124,7 +179,7 @@ module.exports = {
 				} catch (error) {
 					return { error: error };
 				}
-			}, this);
+			};
 			async.retry(
 				options.retry,
 				function(next) {
