@@ -1,7 +1,8 @@
 module.exports = {
 	pages: {
 		paymentDone: {
-			idleTime: 10 * 1000,
+			minTimeElapsedBeforeCanReset: 2000,
+			idleTime: 30 * 1000,
 		},
 	},
 };
