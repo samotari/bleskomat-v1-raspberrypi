@@ -29,6 +29,7 @@ let config = {
 		host: process.env.BLESKOMAT_LND_HOST,
 		cert: process.env.BLESKOMAT_LND_CERT,
 		macaroon: process.env.BLESKOMAT_LND_MACAROON,
+		network: process.env.BLESKOMAT_LND_NETWORK,
 	},
 	exchangeProcess: {
 		fee: process.env.BLESKOMAT_FEE || 0,

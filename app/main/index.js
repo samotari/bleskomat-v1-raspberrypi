@@ -80,8 +80,7 @@ app.on('activate', () => {
 
 let exchangeProcess = {
 	rates: null,
-	payReq: null,
-	payReqDecoded: null,
+	decodedPayReq: null,
 	eur: new BigNumber(0),
 	czk: new BigNumber(0),
 	find: {
@@ -217,42 +216,41 @@ ipcMain.on('start-receiving-bill-notes', event => {
 });
 
 ipcMain.on('decode-payreq', (event, payload) => {
-	let { pay_req } = payload;
-	pay_req = pay_req.toLowerCase();
-	if (pay_req.indexOf(':') !== -1) {
-		pay_req = pay_req.split(':')[1];
+	let { payReq } = payload;
+	payReq = payReq.toLowerCase();
+	if (payReq.indexOf(':') !== -1) {
+		payReq = payReq.split(':')[1];
 	}
-	services.lnd.decodePaymentRequest(pay_req, (error, result) => {
+	let decodedPayReq;
+	try {
+		decodedPayReq = services.lnd.parsePaymentRequest(payReq);
+		if (decodedPayReq.network !== config.lnd.network) {
+			let network = config.lnd.network;
+			throw new Error(`Invoice provided is for a different network. This machine is currently configured to accept invoices on "${network}".`);
+		}
+	} catch (error) {
+		return event.reply('decode-payreq', { error: error.message });
+	}
+	services.lnd.isPayable(decodedPayReq, (error, isPayable) => {
 		if (!event || !win) return;
 		if (error) {
-			logger.error('DecodePaymentRequest.error:', error);
-			event.reply('decode-payreq', { error: error });
-		} else {
-			exchangeProcess.payReq = pay_req;
-			exchangeProcess.payReqDecoded = result;
-			logger.info('DecodePaymentRequest.success:', result);
-			event.reply('decode-payreq', result);
+			return event.reply('decode-payreq', { error: error.message });
 		}
-	},
-	);
+		exchangeProcess.decodedPayReq = decodedPayReq;
+		event.reply('decode-payreq', { decodedPayReq, isPayable });
+	});
 });
 
 ipcMain.on('send-payment', event => {
-	const newAmount = exchangeProcess.calculate.satoshisMinusFee();
-	services.lnd.payExtraToDecodedPaymentRequest(
-		exchangeProcess.payReqDecoded,
-		newAmount,
-		(error, result) => {
-			if (!event || !win) return;
-			if (error) {
-				logger.info('SendPayment.error:', error);
-				event.reply('send-payment', { error: error.message });
-			} else {
-				exchangeProcess.payReq = null;
-				exchangeProcess.payReqDecoded = null;
-				logger.info('SendPayment.success:', result);
-				event.reply('send-payment');
-			}
-		},
-	);
+	const { decodedPayReq } = exchangeProcess;
+	const tokens = exchangeProcess.calculate.satoshisMinusFee();
+	services.lnd.pay(decodedPayReq, tokens, (error, result) => {
+		if (!event || !win) return;
+		if (error) {
+			return event.reply('send-payment', { error: error.message });
+		}
+		// Success!
+		exchangeProcess.decodedPayReq = null;
+		event.reply('send-payment', result);
+	});
 });

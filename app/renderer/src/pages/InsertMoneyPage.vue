@@ -29,7 +29,6 @@
 </template>
 
 <script>
-import _ from 'underscore';
 import Button from '../components/Button';
 import InsertedMoney from '../components/InsertedMoney';
 import PageTemplate from '../components/PageTemplate';
@@ -64,17 +63,7 @@ export default {
 		ipcRenderer.on('send-payment', (event, result) => {
 			this.$loading.hide();
 			if (result && result.error) {
-				let error;
-				if (_.isString(result.error)) {
-					error = result.error;
-				} else if (_.isObject(result.error)) {
-					if (_.isString(result.error.details)) {
-						error = result.error.details;
-					} else {
-						error = JSON.stringify(result.error);
-					}
-				}
-				return alert(error);
+				return alert(result.error);
 			}
 			this.$router.push('/payment-done');
 		});
@@ -89,10 +78,7 @@ export default {
 			return this.amountWillReceive !== '0';
 		},
 		cancel() {
-			if (
-				this.hasEnteredNotes() ||
-				confirm('Are you sure that you want to cancel?')
-			) {
+			if (confirm('Are you sure that you want to cancel?')) {
 				this.$router.push('/');
 			}
 		},

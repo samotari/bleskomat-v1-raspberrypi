@@ -45,18 +45,22 @@ export default {
 	name: 'ScanInvocePage',
 	components: { Button, PageTemplate },
 	mounted() {
-		navigator.getUserMedia(
-			{ video: true, audio: false },
-			localMediaStream => {
-				const video = document.querySelector('video');
-				video.srcObject = this.localMediaStream = localMediaStream;
-				video.autoplay = true;
-				this.startReadingQrCode();
-			},
-			error => {
-				console.log(error); // eslint-disable-line no-console
-			},
-		);
+		try {
+			navigator.getUserMedia(
+				{ video: true, audio: false },
+				localMediaStream => {
+					const video = document.querySelector('video');
+					video.srcObject = this.localMediaStream = localMediaStream;
+					video.autoplay = true;
+					this.startReadingQrCode();
+				},
+				error => {
+					alert(error);
+				},
+			);
+		} catch (error) {
+			alert(error);
+		}
 	},
 	destroyed() {
 		if (this.localMediaStream) {
@@ -85,7 +89,14 @@ export default {
 				async () => {
 					if (!this.canceled && this.qrcode) {
 						try {
-							const decodedPayReq = await this.decodePayReq(this.qrcode);
+							const { decodedPayReq, isPayable } = await this.decodePayReq(
+								this.qrcode,
+							);
+							if (decodedPayReq && !isPayable) {
+								throw new Error(
+									'Invoice not payable. Please check that you have sufficient remote balance in at least one of your channels.',
+								);
+							}
 							this.$router.push({
 								name: 'insert-money',
 								params: { decodedPayReq: decodedPayReq },
@@ -137,27 +148,17 @@ export default {
 			});
 		},
 		async decodePayReq(payReq) {
+			this.$loading.show();
 			const ipcRenderer = window.ipcRenderer;
 			return new Promise((resolve, reject) => {
 				ipcRenderer.on('decode-payreq', (event, result) => {
+					this.$loading.hide();
 					if (result && result.error) {
-						let error;
-						if (_.isString(result.error)) {
-							error = result.error;
-						} else if (_.isObject(result.error)) {
-							if (_.isString(result.error.details)) {
-								error = result.error.details;
-							} else {
-								error = JSON.stringify(result.error);
-							}
-						}
-						return reject(error);
+						return reject(result.error);
 					}
 					resolve(result);
 				});
-				ipcRenderer.send('decode-payreq', {
-					pay_req: payReq,
-				});
+				ipcRenderer.send('decode-payreq', { payReq });
 			});
 		},
 		cancel() {
