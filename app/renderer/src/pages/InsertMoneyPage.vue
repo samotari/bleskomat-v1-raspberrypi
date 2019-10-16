@@ -93,7 +93,7 @@ export default {
 				this.hasEnteredNotes() ||
 				confirm('Are you sure that you want to cancel?')
 			) {
-				this.$router.push('/landing-page');
+				this.$router.push('/');
 			}
 		},
 		done() {

@@ -41,3 +41,9 @@ switch (config.env) {
 		);
 		break;
 }
+
+// Don't use winston logger when the process is exiting.
+process.on('exit', function() {
+	logger.error = function() { console.log.apply(console, arguments); };
+	logger.info = function() { console.log.apply(console, arguments); };
+});

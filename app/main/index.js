@@ -10,14 +10,13 @@ const logger = require('./logger');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
-const fullscreen = config.env !== 'dev';
 
 function createWindow() {
 	// Create the browser window.
 	win = new BrowserWindow({
-		width: 800,
-		height: 480,
-		fullscreen: fullscreen,
+		width: config.electron.window.width,
+		height: config.electron.window.height,
+		fullscreen: config.electron.window.fullscreen,
 		webPreferences: {
 			// This script will be loaded before other scripts run in the page. It will always have
 			// access to node APIs no matter whether node integration is turned on or off. The value
@@ -27,7 +26,7 @@ function createWindow() {
 		},
 	});
 
-	if (fullscreen) {
+	if (config.electron.window.fullscreen) {
 		win.maximize();
 	}
 
@@ -40,7 +39,7 @@ function createWindow() {
 	);
 	win.loadURL(`file://${indexFilePath}`);
 
-	if (config.env === 'dev') {
+	if (config.electron.window.showDevTools) {
 		// Open the DevTools.
 		win.webContents.openDevTools();
 	}
@@ -142,6 +141,7 @@ ipcMain.on('get-exchange-rates', function(event) {
 			});
 		},
 		function(error, results) {
+			if (!event || !win) return;
 			exchangeProcess.rates = results;
 			const rates = _.chain(results)
 				.compact()
@@ -181,6 +181,7 @@ ipcMain.on('start-receiving-bill-notes', event => {
 	port.removeAllListeners('data');
 	const notes = config.paperMoneyReader.notes;
 	const sendBillNotesUpdate = function() {
+		if (!event || !win) return;
 		const amountWillReceive = exchangeProcess.calculate.satoshisMinusFee();
 		const feeToBePaid = exchangeProcess.calculate.fee();
 		const feePercent = new BigNumber(config.exchangeProcess.fee).times(100);
@@ -222,6 +223,7 @@ ipcMain.on('decode-payreq', (event, payload) => {
 		pay_req = pay_req.split(':')[1];
 	}
 	services.lnd.decodePaymentRequest(pay_req, (error, result) => {
+		if (!event || !win) return;
 		if (error) {
 			logger.error('DecodePaymentRequest.error:', error);
 			event.reply('decode-payreq', { error: error });
@@ -241,6 +243,7 @@ ipcMain.on('send-payment', event => {
 		exchangeProcess.payReqDecoded,
 		newAmount,
 		(error, result) => {
+			if (!event || !win) return;
 			if (error) {
 				logger.info('SendPayment.error:', error);
 				event.reply('send-payment', { error: error.message });

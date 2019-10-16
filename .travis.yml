@@ -2,4 +2,8 @@ language: node_js
 node_js:
   - "10"
 
-script: cd app && npm install && npm run build && npm test
+services:
+  - xvfb
+
+install: cd app && npm install && npm run build
+script: npm test

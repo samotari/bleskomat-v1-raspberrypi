@@ -87,7 +87,7 @@ export default {
 						try {
 							const decodedPayReq = await this.decodePayReq(this.qrcode);
 							this.$router.push({
-								name: 'insert-money-page',
+								name: 'insert-money',
 								params: { decodedPayReq: decodedPayReq },
 							});
 						} catch (error) {
@@ -162,7 +162,7 @@ export default {
 		},
 		cancel() {
 			this.canceled = true;
-			this.$router.push('/landing-page');
+			this.$router.push('/');
 		},
 	},
 };

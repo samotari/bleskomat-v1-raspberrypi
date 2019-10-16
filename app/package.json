@@ -22,12 +22,14 @@
     "mock:webcam": "./scripts/mock-webcam.sh",
     "mock:serialports": "./scripts/mock-serialports.sh",
     "mock:paper-money-reader": "node ./scripts/mock-paper-money-reader.js",
-    "lint": "npm run lint:main && npm run lint:renderer",
+    "lint": "npm run lint:main && npm run lint:renderer && npm run lint:test",
     "lint:main": "./node_modules/.bin/eslint --config .eslintrc.main.js \"./main/**/*.js\"",
     "lint:renderer": "./node_modules/.bin/eslint --config .eslintrc.renderer.js \"./renderer/src/**/*.{js,vue}\"",
+    "lint:test": "./node_modules/.bin/eslint --config .eslintrc.test.js \"./test/**/*.js\"",
     "postinstall": "./node_modules/.bin/electron-builder install-app-deps",
     "prettier": "./node_modules/.bin/prettier --write \"./main/**/*.js\" \"./renderer/src/**/*.{js,vue}\" \"*.js\"",
-    "test": "npm run lint",
+    "test": "npm run test:e2e && npm run lint",
+    "test:e2e": "./node_modules/.bin/mocha ./test/e2e/*.js ./test/e2e/**/*.js",
     "start": "npm run build:dev && npm run app:dev"
   },
   "repository": {
@@ -71,7 +73,9 @@
     "electron-builder": "21.2.0",
     "eslint": "5.16.0",
     "eslint-plugin-vue": "5.0.0",
-    "prettier": "1.18.2"
+    "mocha": "6.2.1",
+    "prettier": "1.18.2",
+    "spectron": "8.0.0"
   },
   "eslintConfig": {
     "root": true,

@@ -2,30 +2,33 @@ const { app } = require('electron');
 require('dotenv').config();
 const path = require('path');
 
-if (app) {
-	app.setAppLogsPath();
-}
+const env = process.env.NODE_ENV || 'dev';
 
-module.exports = {
-	env: process.env.NODE_ENV || 'dev',
-	appPath: (app && app.getAppPath()) || null,
-	logsPath: (app && app.getPath('logs')) || null,
+let config = {
+	env: env,
+	appPath: null,
+	logsPath: null,
 	db: {
 		knex: {
 			client: 'sqlite3',
 			connection: {
-				filename: (app && path.join(app.getPath('userData'), 'bleskomat.db.sqlite3')) || ':memory:',
+				filename: null,
 			},
 			useNullAsDefault: true,
+		},
+	},
+	electron: {
+		window: {
+			width: 800,
+			height: 480,
+			fullscreen: env === 'production',
+			showDevTools: env === 'dev',
 		},
 	},
 	lnd: {
 		host: process.env.BLESKOMAT_LND_HOST,
 		cert: process.env.BLESKOMAT_LND_CERT,
 		macaroon: process.env.BLESKOMAT_LND_MACAROON,
-	},
-	lightning: {
-		finalCltvDelta: 144,
 	},
 	exchangeProcess: {
 		fee: process.env.BLESKOMAT_FEE || 0,
@@ -111,3 +114,16 @@ module.exports = {
 		},
 	},
 };
+
+if (app) {
+	app.setAppLogsPath();
+	config.appPath = app.getAppPath();
+	config.logsPath = app.getPath('logs');
+	if (env === 'test') {
+		config.db.knex.connection.filename = ':memory:';
+	} else {
+		config.db.knex.connection.filename = path.join(app.getPath('userData'), 'bleskomat.db.sqlite3');
+	}
+}
+
+module.exports = config;
