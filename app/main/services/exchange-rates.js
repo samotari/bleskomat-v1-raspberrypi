@@ -1,10 +1,8 @@
 const _ = require('underscore');
 const async = require('async');
-const Handlebars = require('handlebars');
-const request = require('request');
-const logger = require('../logger');
-
 const db = require('./db');
+const https = require('https');
+const logger = require('../logger');
 
 module.exports = {
 	defaultOptions: {
@@ -150,7 +148,7 @@ module.exports = {
 				currencies[key.toLowerCase()] = symbol.toLowerCase();
 				currencies[key.toUpperCase()] = symbol.toUpperCase();
 			});
-			let url = this.formatText(provider.url, currencies);
+			const uri = this.formatText(provider.url, currencies);
 			let jsonPath = _.mapObject(
 				provider.jsonPath,
 				function(path) {
@@ -158,10 +156,6 @@ module.exports = {
 				},
 				this,
 			);
-			let requestOptions = {
-				method: 'GET',
-				url: url,
-			};
 			let parseResponseBody = (body) => {
 				try {
 					let data = JSON.parse(body);
@@ -184,12 +178,21 @@ module.exports = {
 				options.retry,
 				function(next) {
 					try {
-						request(requestOptions, function(error, response, body) {
-							if (error) return next(error);
-							let data = parseResponseBody(body);
-							if (data.error) return next(new Error(data.error));
-							next(null, data.result);
+						const req = https.request(uri, function(res) {
+							let body = '';
+							res.on('data', function(data) {
+								body += data.toString();
+							});
+							res.on('end', function() {
+								let data = parseResponseBody(body);
+								if (data.error) return next(new Error(data.error));
+								next(null, data.result);
+							});
 						});
+						req.on('error', error => {
+							next(error);
+						});
+						req.end();
 					} catch (error) {
 						return next(error);
 					}
@@ -242,7 +245,12 @@ module.exports = {
 		return this.providers[providerName] || null;
 	},
 	formatText: function(text, data) {
-		return Handlebars.compile(text)(data);
+		_.chain(data)
+			.pick('from', 'to', 'FROM', 'TO')
+			.each(function(value, key) {
+				text = text.replace(`{{${key}}}`, value);
+			});
+		return text;
 	},
 	providers: {
 		binance: {
