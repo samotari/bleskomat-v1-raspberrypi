@@ -7,22 +7,22 @@ export default new Router({
 	routes: [
 		{
 			path: '/',
-			name: 'landing-page',
+			name: 'landing',
 			component: require('./pages/LandingPage').default,
 		},
 		{
 			path: '/scan-invoice',
-			name: 'scan-invoce-page',
+			name: 'scan-invoice',
 			component: require('./pages/ScanInvoicePage').default,
 		},
 		{
 			path: '/insert-money/:decodedPayReq',
-			name: 'insert-money-page',
+			name: 'insert-money',
 			component: require('./pages/InsertMoneyPage').default,
 		},
 		{
 			path: '/payment-done',
-			name: 'payment-done-page',
+			name: 'payment-done',
 			component: require('./pages/PaymentDonePage').default,
 		},
 		{

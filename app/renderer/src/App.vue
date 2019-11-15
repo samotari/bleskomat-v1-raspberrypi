@@ -1,5 +1,5 @@
 <template>
-	<div id="app">
+	<div id="app" :data-page="page">
 		<RouterView />
 	</div>
 </template>
@@ -7,6 +7,16 @@
 <script>
 export default {
 	name: 'App',
+	data() {
+		return {
+			page: this.$router.history.current.name || '',
+		};
+	},
+	mounted() {
+		this.$router.afterEach(to => {
+			this.page = to.name || '';
+		});
+	},
 };
 </script>
 
